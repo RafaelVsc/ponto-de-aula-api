@@ -39,7 +39,7 @@ coverage/
 !.vscode/extensions.json
 
 # Arquivos do Copilot
-.github/copilot-instructions.md
+.github/
 # Arquivos temporários
 tmp/
 temp/

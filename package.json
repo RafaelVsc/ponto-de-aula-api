@@ -1,11 +1,11 @@
 {
   "name": "teste-ponto-de-aula",
   "version": "1.0.0",
-  "main": "dist/index.js",
+  "main": "dist/main/server.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "dev": "ts-node-dev --respawn --transpile-only src/main/server.ts",
     "build": "tsc",
-    "start": "node dist/index.js",
+    "start": "node dist/main/server.js",
     "test": "jest",
     "test:coverage": "jest --coverage"
   },
