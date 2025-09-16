@@ -10,6 +10,7 @@ API em Node.js + TypeScript com Express, organizada em Clean Architecture. Inclu
 - Produção: `npm start` (executa `dist/main/server.js`)
 
 Endpoints básicos:
+
 - `GET /health` – health check
 - `GET /` – mensagem de boas-vindas
 - `POST /posts` – cria post
@@ -28,6 +29,7 @@ Endpoints básicos:
 - `src/shared` – Utilitários e tipos compartilhados (ex.: `AppError`).
 
 Responsabilidades chave:
+
 - Controllers não possuem regra de negócio; apenas validam entrada mínima, chamam casos de uso e traduzem respostas/erros.
 - Use cases contêm a regra de negócio e lidam com erros de domínio (ex.: `AppError` com `statusCode`).
 - Repositórios implementam persistência. Por padrão, está usando memória (`InMemoryPostRepository`).
@@ -35,6 +37,7 @@ Responsabilidades chave:
 ## Qualidade de código
 
 ESLint + Prettier configurados (TypeScript) e scripts úteis:
+
 - `npm run lint` – analisa o código
 - `npm run lint:fix` – corrige problemas auto-fixáveis
 - `npm run format` – formata com Prettier
@@ -50,4 +53,3 @@ Observação: é necessário `npm install` para instalar ESLint/Prettier e suas 
 - Testes (Jest + Supertest) com cobertura mínima de 20%.
 - Documentação Swagger/OpenAPI.
 - Pipeline CI (GitHub Actions) para lint, testes e build.
-

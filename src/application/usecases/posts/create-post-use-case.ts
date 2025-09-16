@@ -16,10 +16,10 @@ export class CreatePostUseCase {
       tags,
     };
     const createdPost = await this.postRepository.create(newPost);
-    
+
     // Retornando apenas o ID conforme definido no OutputDTO
     return {
-      id: createdPost.id as string
+      id: createdPost.id as string,
     };
   }
 }

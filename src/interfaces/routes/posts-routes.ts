@@ -4,10 +4,13 @@ import { ListAllPostsController } from '../http/controllers/posts/find-posts-con
 import { UpdatePostController } from '../http/controllers/posts/update-post-controller';
 import { DeletPostController } from '../http/controllers/posts/delete-post-controller';
 
-export default (router: Router, postController: PostController, 
+export default (
+  router: Router,
+  postController: PostController,
   listPostController: ListAllPostsController,
   updatePostController: UpdatePostController,
-  deletePostController: DeletPostController): void => {
+  deletePostController: DeletPostController,
+): void => {
   router.post('/', (req, res) => postController.create(req, res));
   router.get('/', (req, res) => listPostController.listAll(req, res));
   router.get('/:id', (req, res) => listPostController.findById(req, res));
