@@ -2,13 +2,11 @@ import express from 'express';
 import { buildPostsModule } from '@/main/modules/posts/posts.module';
 import { errorHandler, notFound } from '@/interfaces/http/middlewares/error-handler';
 
-
 export function buildApp() {
   const app = express();
 
   // Middlewares
   app.use(express.json());
-
 
   // Routes
   app.use('/posts', buildPostsModule());

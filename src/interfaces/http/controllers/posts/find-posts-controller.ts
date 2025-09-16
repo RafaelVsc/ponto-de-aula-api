@@ -4,10 +4,11 @@ import { Request, Response } from 'express';
 import { SearchPostsUseCase } from '../../../../application/usecases/posts/search-posts-use-case';
 
 export class ListAllPostsController {
-  constructor(private listPostUseCase: ListPostsUseCase,
+  constructor(
+    private listPostUseCase: ListPostsUseCase,
     private getPostByIdUseCase: GetPostByIdUseCase,
-    private searchPostsUseCase: SearchPostsUseCase
-  ) { }
+    private searchPostsUseCase: SearchPostsUseCase,
+  ) {}
 
   async findById(req: Request, res: Response): Promise<Response> {
     try {
@@ -18,15 +19,12 @@ export class ListAllPostsController {
 
       const findedPost = await this.getPostByIdUseCase.execute(postId);
       return res.status(200).json(findedPost);
-
-
     } catch (error) {
       const status = (error as any)?.status || 400;
       if (error instanceof Error) {
         return res.status(status).json({ error: error.message });
       }
       return res.status(500).json({ error: 'Erro interno do servidor' });
-
     }
   }
 
@@ -53,8 +51,8 @@ export class ListAllPostsController {
           authorId: typeof authorId === 'string' ? authorId : undefined,
           page: typeof page === 'string' ? Number(page) : undefined,
           limit: typeof limit === 'string' ? Number(limit) : undefined,
-          sortBy: (typeof sortBy === 'string' ? (sortBy as any) : undefined),
-          sortOrder: (typeof sortOrder === 'string' ? (sortOrder as any) : undefined),
+          sortBy: typeof sortBy === 'string' ? (sortBy as any) : undefined,
+          sortOrder: typeof sortOrder === 'string' ? (sortOrder as any) : undefined,
         });
         return res.status(200).json(posts);
       }
@@ -68,6 +66,4 @@ export class ListAllPostsController {
       return res.status(500).json({ error: 'Erro interno do servidor' });
     }
   }
-
-
 }
