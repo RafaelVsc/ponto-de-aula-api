@@ -1,16 +1,15 @@
-import { Post } from "../../../domain/entities/Post";
-import { PostRepository } from "../../../domain/repositories/post-repository";
-
+import { Post } from '../../../domain/entities/Post';
+import { PostRepository } from '../../../domain/repositories/post-repository';
+import { AppError } from '../../../shared/errors/app-error';
 
 export class GetPostByIdUseCase {
-    constructor(private postRepository: PostRepository) {}
+  constructor(private postRepository: PostRepository) {}
 
-    async execute(id: string): Promise<Post | null> {
-        const post = await this.postRepository.findById(id);
-
-        if(!post) {
-            throw new Error('Post não localizado');
-        }
-        return post;
+  async execute(id: string): Promise<Post | null> {
+    const post = await this.postRepository.findById(id);
+    if (!post) {
+      throw new AppError('Post não localizado', 404);
     }
+    return post;
+  }
 }

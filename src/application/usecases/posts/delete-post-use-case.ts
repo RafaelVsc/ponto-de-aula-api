@@ -1,4 +1,5 @@
-import { PostRepository } from "../../../domain/repositories/post-repository";
+import { PostRepository } from '../../../domain/repositories/post-repository';
+import { AppError } from '../../../shared/errors/app-error';
 
 export class DeletePostUseCase {
   constructor(private postRepository: PostRepository) {}
@@ -6,11 +7,8 @@ export class DeletePostUseCase {
   async execute(id: string): Promise<void> {
     const existing = await this.postRepository.findById(id);
     if (!existing) {
-      const err = new Error('Post não localizado');
-      (err as any).status = 404;
-      throw err;
+      throw new AppError('Post não localizado', 404);
     }
     await this.postRepository.delete(id);
   }
 }
-
