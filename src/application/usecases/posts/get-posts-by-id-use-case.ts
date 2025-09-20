@@ -1,5 +1,5 @@
 import { Post } from '../../../domain/entities/Post';
-import { PostRepository } from '../../../domain/repositories/post-repository';
+import { PostRepository } from '../../../domain/repositories/posts/post-repository';
 import { AppError } from '../../../shared/errors/app-error';
 
 export class GetPostByIdUseCase {
@@ -8,7 +8,7 @@ export class GetPostByIdUseCase {
   async execute(id: string): Promise<Post | null> {
     const post = await this.postRepository.findById(id);
     if (!post) {
-      throw new AppError('Post não localizado', 404);
+      throw new AppError('Post not found', 404);
     }
     return post;
   }

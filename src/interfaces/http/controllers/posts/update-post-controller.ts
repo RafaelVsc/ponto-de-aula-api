@@ -12,7 +12,7 @@ export class UpdatePostController {
       }
 
       const updated = await this.updatePostUseCase.execute(postId, req.body);
-      return res.status(200).json({ message: 'Post atualizado com sucesso!', data: updated });
+      return res.status(200).json({ data: updated });
     } catch (error) {
       const status = (error as any)?.status || 400;
       if (error instanceof Error) {

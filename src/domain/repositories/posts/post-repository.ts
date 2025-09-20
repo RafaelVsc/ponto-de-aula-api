@@ -1,4 +1,4 @@
-import { Post } from '../entities/Post';
+import { Post } from '../../entities/Post';
 import { FindPostsParams } from './find-posts-params';
 
 export interface PostRepository {

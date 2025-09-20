@@ -1,5 +1,5 @@
 import { Post } from '../../../domain/entities/Post';
-import { PostRepository } from '../../../domain/repositories/post-repository';
+import { PostRepository } from '../../../domain/repositories/posts/post-repository';
 
 export class ListPostsUseCase {
   constructor(private postRepository: PostRepository) {}

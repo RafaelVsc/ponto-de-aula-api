@@ -1,7 +1,7 @@
-import { CreatePostUseCase } from '../../../../application/usecases/posts/create-post-use-case';
 import { Request, Response } from 'express';
+import { CreatePostUseCase } from '@/application/usecases/posts/create-post-use-case';
 
-export class PostController {
+export class CreatePostController {
   constructor(private createPostUseCase: CreatePostUseCase) {}
 
   async create(req: Request, res: Response): Promise<Response> {
@@ -20,10 +20,7 @@ export class PostController {
         tags: tags || [],
       });
 
-      return res.status(201).json({
-        message: 'Post criado com sucesso',
-        data: { id: result.id },
-      });
+      return res.status(201).json(result);
     } catch (error) {
       if (error instanceof Error) {
         return res.status(400).json({ error: error.message });

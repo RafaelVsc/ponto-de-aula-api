@@ -1,7 +1,7 @@
-import { GetPostByIdUseCase } from '../../../../application/usecases/posts/get-posts-by-id-use-case';
-import { ListPostsUseCase } from '../../../../application/usecases/posts/list-posts-use-case';
+import { GetPostByIdUseCase } from '@/application/usecases/posts/get-posts-by-id-use-case';
+import { ListPostsUseCase } from '@/application/usecases/posts/list-posts-use-case';
 import { Request, Response } from 'express';
-import { SearchPostsUseCase } from '../../../../application/usecases/posts/search-posts-use-case';
+import { SearchPostsUseCase } from '@/application/usecases/posts/search-posts-use-case';
 
 export class ListAllPostsController {
   constructor(
@@ -17,8 +17,8 @@ export class ListAllPostsController {
         return res.status(400).json({ error: 'Parâmetro id é obrigatório' });
       }
 
-      const findedPost = await this.getPostByIdUseCase.execute(postId);
-      return res.status(200).json(findedPost);
+      const foundPost = await this.getPostByIdUseCase.execute(postId);
+      return res.status(200).json({ data: foundPost });
     } catch (error) {
       const status = (error as any)?.status || 400;
       if (error instanceof Error) {
@@ -31,7 +31,7 @@ export class ListAllPostsController {
   async listAll(_req: Request, res: Response): Promise<Response> {
     try {
       const posts = await this.listPostUseCase.execute();
-      return res.status(200).json(posts);
+      return res.status(200).json({ data: posts });
     } catch (error) {
       if (error instanceof Error) {
         return res.status(400).json({ error: error.message });
@@ -54,11 +54,11 @@ export class ListAllPostsController {
           sortBy: typeof sortBy === 'string' ? (sortBy as any) : undefined,
           sortOrder: typeof sortOrder === 'string' ? (sortOrder as any) : undefined,
         });
-        return res.status(200).json(posts);
+        return res.status(200).json({ data: posts });
       }
 
       const posts = await this.listPostUseCase.execute();
-      return res.status(200).json(posts);
+      return res.status(200).json({ data: posts });
     } catch (error) {
       if (error instanceof Error) {
         return res.status(400).json({ error: error.message });
