@@ -1,5 +1,5 @@
 import { Post } from '../../../domain/entities/Post';
-import { PostRepository } from '../../../domain/repositories/post-repository';
+import { PostRepository } from '../../../domain/repositories/posts/post-repository';
 import { CreatePostInputDTO, CreatePostOutputDTO } from '../../dto/CreatePostDTO';
 
 export class CreatePostUseCase {

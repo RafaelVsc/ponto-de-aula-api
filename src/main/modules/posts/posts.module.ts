@@ -1,11 +1,11 @@
 // src/main/modules/posts/posts.module.ts
 import { Router } from 'express';
 import postsRoutes from '@/interfaces/routes/posts-routes';
-import { PostController } from '@/interfaces/http/controllers/posts/create-post-controller';
+import { CreatePostController } from '@/interfaces/http/controllers/posts/create-post-controller';
 import { ListAllPostsController } from '@/interfaces/http/controllers/posts/find-posts-controller';
 import { UpdatePostController } from '@/interfaces/http/controllers/posts/update-post-controller';
-import { DeletPostController } from '@/interfaces/http/controllers/posts/delete-post-controller';
-import { InMemoryPostRepository } from '@/infrastructure/database/inMemoryPostRepository';
+import { DeletePostController } from '@/interfaces/http/controllers/posts/delete-post-controller';
+import { InMemoryPostRepository } from '@/infrastructure/database/in-memory-post-repository';
 import { CreatePostUseCase } from '@/application/usecases/posts/create-post-use-case';
 import { ListPostsUseCase } from '@/application/usecases/posts/list-posts-use-case';
 import { GetPostByIdUseCase } from '@/application/usecases/posts/get-posts-by-id-use-case';
@@ -23,14 +23,14 @@ export function buildPostsModule(): Router {
   const updatePostUseCase = new UpdatePostUseCase(postRepository);
   const deletePostUseCase = new DeletePostUseCase(postRepository);
 
-  const postController = new PostController(createPostUseCase);
+  const postController = new CreatePostController(createPostUseCase);
   const listPostController = new ListAllPostsController(
     listPostsUseCase,
     getPostByIdUseCase,
     searchPostsUseCase,
   );
   const updatePostController = new UpdatePostController(updatePostUseCase);
-  const deletePostController = new DeletPostController(deletePostUseCase);
+  const deletePostController = new DeletePostController(deletePostUseCase);
 
   const router = Router();
   postsRoutes(

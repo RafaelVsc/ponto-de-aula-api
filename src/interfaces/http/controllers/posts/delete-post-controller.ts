@@ -1,7 +1,7 @@
-import { DeletePostUseCase } from '../../../../application/usecases/posts/delete-post-use-case';
+import { DeletePostUseCase } from '@/application/usecases/posts/delete-post-use-case';
 import { Request, Response } from 'express';
 
-export class DeletPostController {
+export class DeletePostController {
   constructor(private deletePostUseCase: DeletePostUseCase) {}
 
   async delete(req: Request, res: Response): Promise<Response> {
