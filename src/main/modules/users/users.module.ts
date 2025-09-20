@@ -1,5 +1,5 @@
 import { CreateUserUseCase } from '@/application/usecases/users/create-user-use-case';
-import { InMemoryUserRepository } from '@/infrastructure/database/inMemoryUserRepository';
+import { InMemoryUserRepository } from '@/infrastructure/database/in-memory-user-repository';
 import { BcryptHasher } from '@/infrastructure/security/bcrypt-hasher';
 import { CreateUserController } from '@/interfaces/http/controllers/user/create-user-controller';
 import userRoutes from '@/interfaces/routes/user-routes';
