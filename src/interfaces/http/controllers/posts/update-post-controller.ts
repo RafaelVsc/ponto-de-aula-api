@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { UpdatePostUseCase } from '../../../../application/usecases/posts/update-post-use-case';
+import { UpdatePostUseCase } from '@/application/usecases/posts/update-post-use-case';
 
 export class UpdatePostController {
   constructor(private updatePostUseCase: UpdatePostUseCase) {}

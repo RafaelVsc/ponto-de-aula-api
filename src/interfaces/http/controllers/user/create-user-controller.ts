@@ -6,27 +6,25 @@ export class CreateUserController {
 
   async create(req: Request, res: Response): Promise<Response> {
     try {
-      const { name, email, password, role, username } = req.body;
+      // Como o middleware de validação Zod já validou os dados,
+      // não precisamos mais fazer validações manuais
+      const result = await this.createUserUseCase.execute(req.body);
 
-      if (!name || !email || !password || !role) {
-        return res.status(400).json({ error: 'name, email, password e role são obrigatórios' });
-      }
-
-      const result = await this.createUserUseCase.execute({
-        name,
-        email,
-        password,
-        role,
-        username,
+      return res.status(201).json({
+        data: result,
       });
-
-      return res.status(201).json(result);
     } catch (error) {
       if (error instanceof Error) {
-        return res.status(400).json({ error: error.message });
+        return res.status(400).json({
+          status: 'error',
+          message: error.message,
+        });
       }
 
-      return res.status(500).json({ error: 'Erro interno do servidor' });
+      return res.status(500).json({
+        status: 'error',
+        message: 'Erro interno do servidor',
+      });
     }
   }
 }
