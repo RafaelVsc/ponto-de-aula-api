@@ -2,10 +2,9 @@ import { UserRole } from '@/domain/entities/User';
 
 export interface UpdateUserInputDTO {
   name?: string;
-  username?: string;
   email?: string;
   password?: string;
-  role?: UserRole;
+  // Removido username e role pois não são editáveis
 }
 
 export interface UpdateUserOutputDTO {

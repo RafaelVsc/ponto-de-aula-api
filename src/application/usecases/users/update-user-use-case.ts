@@ -16,7 +16,7 @@ export class UpdateUserUseCase {
       throw new AppError('User not found', 404);
     }
 
-    const { name, email, username, role, password } = data;
+    const { name, email, password } = data;
 
     if (email && email !== current.email) {
       const existingByEmail = await this.userRepository.findByEmail(email);
@@ -25,18 +25,9 @@ export class UpdateUserUseCase {
       }
     }
 
-    if (username && username !== current.username) {
-      const existingByUsername = await this.userRepository.findByUsername(username);
-      if (existingByUsername && existingByUsername.id !== current.id) {
-        throw new AppError('Username already registered', 409);
-      }
-    }
-
     const updatePayload: Partial<User> = {};
     if (name !== undefined) updatePayload.name = name;
     if (email !== undefined) updatePayload.email = email;
-    if (username !== undefined) updatePayload.username = username;
-    if (role !== undefined) updatePayload.role = role;
 
     if (password) {
       const passwordHash = await this.passwordHasher.hash(password);
