@@ -1,6 +1,6 @@
 import { GetPostByIdUseCase } from '@/application/usecases/posts/get-posts-by-id-use-case';
 import { ListPostsUseCase } from '@/application/usecases/posts/list-posts-use-case';
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { SearchPostsUseCase } from '@/application/usecases/posts/search-posts-use-case';
 
 export class ListAllPostsController {
@@ -10,7 +10,7 @@ export class ListAllPostsController {
     private searchPostsUseCase: SearchPostsUseCase,
   ) {}
 
-  async findById(req: Request, res: Response): Promise<Response> {
+  async findById(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
       const postId = req.params.id;
       if (!postId) {
@@ -20,27 +20,29 @@ export class ListAllPostsController {
       const foundPost = await this.getPostByIdUseCase.execute(postId);
       return res.status(200).json({ data: foundPost });
     } catch (error) {
-      const status = (error as any)?.status || 400;
-      if (error instanceof Error) {
-        return res.status(status).json({ error: error.message });
-      }
-      return res.status(500).json({ error: 'Erro interno do servidor' });
+      next(error)
+      // const status = (error as any)?.status || 400;
+      // if (error instanceof Error) {
+      //   return res.status(status).json({ error: error.message });
+      // }
+      // return res.status(500).json({ error: 'Erro interno do servidor' });
     }
   }
 
-  async listAll(_req: Request, res: Response): Promise<Response> {
+  async listAll(_req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
       const posts = await this.listPostUseCase.execute();
       return res.status(200).json({ data: posts });
     } catch (error) {
-      if (error instanceof Error) {
-        return res.status(400).json({ error: error.message });
-      }
-      return res.status(500).json({ error: 'Erro interno do servidor' });
+      next(error)
+      // if (error instanceof Error) {
+      //   return res.status(400).json({ error: error.message });
+      // }
+      // return res.status(500).json({ error: 'Erro interno do servidor' });
     }
   }
 
-  async search(req: Request, res: Response): Promise<Response> {
+  async search(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
       const { search, tag, authorId, page, limit, sortBy, sortOrder } = req.query;
 
@@ -60,10 +62,11 @@ export class ListAllPostsController {
       const posts = await this.listPostUseCase.execute();
       return res.status(200).json({ data: posts });
     } catch (error) {
-      if (error instanceof Error) {
-        return res.status(400).json({ error: error.message });
-      }
-      return res.status(500).json({ error: 'Erro interno do servidor' });
+      next(error)
+      // if (error instanceof Error) {
+      //   return res.status(400).json({ error: error.message });
+      // }
+      // return res.status(500).json({ error: 'Erro interno do servidor' });
     }
   }
 }
