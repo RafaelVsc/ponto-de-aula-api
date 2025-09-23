@@ -15,7 +15,7 @@ export default (
   deletePostController: DeletePostController,
 ): void => {
   // Rota POST com middleware de validação Zod
-  router.post('/', validate(createPostSchema), (req, res) => postController.create(req, res));
+  router.post('/', validate(createPostSchema), (req, res, next) => postController.create(req, res, next));
   router.get('/', (req, res) => listPostController.listAll(req, res));
   router.get('/:id', (req, res) => listPostController.findById(req, res));
   router.patch('/:id', validate(updatePostSchema), (req, res) =>

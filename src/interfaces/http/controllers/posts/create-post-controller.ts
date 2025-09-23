@@ -1,10 +1,10 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { CreatePostUseCase } from '@/application/usecases/posts/create-post-use-case';
 
 export class CreatePostController {
   constructor(private createPostUseCase: CreatePostUseCase) {}
 
-  async create(req: Request, res: Response): Promise<Response> {
+  async create(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
       // Como o middleware de validação já validou os dados,
       // podemos apenas enviar para o caso de uso
@@ -16,16 +16,17 @@ export class CreatePostController {
         data: result,
       });
     } catch (error) {
-      if (error instanceof Error) {
-        return res.status(400).json({
-          status: 'error',
-          message: error.message,
-        });
-      }
-      return res.status(500).json({
-        status: 'error',
-        message: 'Erro interno do servidor',
-      });
+      return next(error)
+      // if (error instanceof Error) {
+      //   return res.status(400).json({
+      //     status: 'error',
+      //     message: error.message,
+      //   });
+      // }
+      // return res.status(500).json({
+      //   status: 'error',
+      //   message: 'Erro interno do servidor',
+      // });
     }
   }
 }
