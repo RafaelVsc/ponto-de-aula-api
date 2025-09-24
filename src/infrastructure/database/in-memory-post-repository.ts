@@ -1,10 +1,10 @@
 import { Post } from '../../domain/entities/Post';
 import { FindPostsParams } from '../../domain/repositories/posts/find-posts-params';
 import { PostRepository } from '../../domain/repositories/posts/post-repository';
+import { randomUUID } from 'crypto';
 
 export class InMemoryPostRepository implements PostRepository {
   private posts: Post[] = [];
-  private nextId = 1;
 
   async findById(id: string): Promise<Post | null> {
     const post = this.posts.find(post => post.id === id);
@@ -96,7 +96,7 @@ export class InMemoryPostRepository implements PostRepository {
     const now = new Date();
     const newPost: Post = {
       ...post,
-      id: String(this.nextId++),
+      id: String(randomUUID()),
       createdAt: now,
       updatedAt: now,
       tags: post.tags ?? [],

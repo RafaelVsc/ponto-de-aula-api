@@ -1,9 +1,9 @@
 import { User } from '@/domain/entities/User';
 import { UserRepository } from '@/domain/repositories/users/user-repository';
+import { randomUUID } from 'crypto';
 
 export class InMemoryUserRepository implements UserRepository {
   private users: User[] = [];
-  private nextId = 1;
 
   async findById(id: string): Promise<User | null> {
     return this.users.find(user => user.id === id) ?? null;
@@ -21,7 +21,7 @@ export class InMemoryUserRepository implements UserRepository {
     const now = new Date();
     const newUser: User = {
       ...user,
-      id: String(this.nextId++),
+      id: randomUUID(),
       registeredAt: now,
     };
 
