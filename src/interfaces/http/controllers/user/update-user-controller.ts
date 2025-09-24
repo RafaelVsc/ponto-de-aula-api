@@ -1,10 +1,10 @@
 import { UpdateUserUseCase } from "@/application/usecases/users/update-user-use-case";
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 
 export class UpdateUserController {
     constructor(private updateUserUseCase: UpdateUserUseCase) { }
 
-    async update(req: Request, res: Response): Promise<Response> {
+    async update(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
         try {
             const userId = req.params.id;
             
@@ -24,19 +24,20 @@ export class UpdateUserController {
                 data: updated
             });
         } catch (error) {
-            const status = (error as any)?.status || 400;
+            return next(error)
+            // const status = (error as any)?.status || 400;
             
-            if (error instanceof Error) {
-                return res.status(status).json({
-                    status: 'error',
-                    message: error.message
-                });
-            }
+            // if (error instanceof Error) {
+            //     return res.status(status).json({
+            //         status: 'error',
+            //         message: error.message
+            //     });
+            // }
             
-            return res.status(500).json({
-                status: 'error',
-                message: 'Erro interno do servidor'
-            });
+            // return res.status(500).json({
+            //     status: 'error',
+            //     message: 'Erro interno do servidor'
+            // });
         }
     }
 }

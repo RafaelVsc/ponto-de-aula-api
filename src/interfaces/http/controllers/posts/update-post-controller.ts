@@ -8,18 +8,13 @@ export class UpdatePostController {
     try {
       const postId = req.params.id;
       if (!postId) {
-        return res.status(400).json({ error: 'Parâmetro id é obrigatório' });
+        return next()
       }
 
       const updated = await this.updatePostUseCase.execute(postId, req.body);
       return res.status(200).json({ data: updated });
     } catch (error) {
       return next(error)
-      // const status = (error as any)?.status || 400;
-      // if (error instanceof Error) {
-      //   return res.status(status).json({ error: error.message });
-      // }
-      // return res.status(500).json({ error: 'Erro interno do servidor' });
     }
   }
 }

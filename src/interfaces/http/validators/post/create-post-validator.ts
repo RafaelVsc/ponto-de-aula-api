@@ -8,5 +8,3 @@ export const createPostSchema = z.object({
   imageUrl: z.string().optional(),
   tags: z.array(z.string()).optional().default([]),
 });
-
-export type CreatePostValidatorInput = z.infer<typeof createPostSchema>;
