@@ -99,7 +99,7 @@ export class InMemoryPostRepository implements PostRepository {
       id: String(randomUUID()),
       createdAt: now,
       updatedAt: now,
-      tags: post.tags ?? [],
+      tags: post.tags,
     };
     this.posts.push(newPost);
     return newPost;

@@ -38,7 +38,7 @@ export class CreateUserUseCase {
     return {
       id: createdUser.id!,
       email: createdUser.email,
-      username: createdUser.username!,
+      username: createdUser.username,
       role: createdUser.role,
     };
   }

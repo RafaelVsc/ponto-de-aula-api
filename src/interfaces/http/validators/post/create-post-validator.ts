@@ -5,6 +5,6 @@ export const createPostSchema = z.object({
   content: z.string(),
   authorId: z.uuid(),
   videoUrl: z.url().optional(),
-  imageUrl: z.string().optional(),
+  imageUrl: z.url().optional(),
   tags: z.array(z.string()).optional().default([]),
 });

@@ -6,7 +6,7 @@ export class CreatePostUseCase {
   constructor(private postRepository: PostRepository) {}
 
   async execute(post: CreatePostInputDTO): Promise<CreatePostOutputDTO> {
-    const { title, content, authorId, videoUrl, imageUrl, tags = ['post'] } = post;
+    const { title, content, authorId, videoUrl, imageUrl, tags } = post;
     const newPost: Post = {
       title,
       content,

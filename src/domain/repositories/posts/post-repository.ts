@@ -8,5 +8,3 @@ export interface PostRepository {
   update(id: string, data: Partial<Post>): Promise<Post | null>;
   delete(id: string): Promise<void>;
 }
-
-// mudar o findPostMParams ou criar nesse arquivo
