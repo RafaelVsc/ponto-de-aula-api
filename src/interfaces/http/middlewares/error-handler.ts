@@ -8,12 +8,14 @@ export function errorHandler(
   _next: NextFunction,
 ): void {
   if (err instanceof AppError) {
-    res.status(err.statusCode).json({ error: err.message, details: err.details });
+    res.status(err.statusCode).json({ error: { message: err.message, details: err.details } });
     return;
   }
-  const status = (err as any)?.status || 500;
+  const status = (err as any)?.statusCode ?? (err as any)?.status ?? 500;
   const message = err instanceof Error ? err.message : 'Internal server error';
-  res.status(status).json({ error: message });
+  const details = (err as any)?.details;
+
+  res.status(status).json({ error: { message, details } });
 }
 
 export function notFound(_req: Request, res: Response) {
