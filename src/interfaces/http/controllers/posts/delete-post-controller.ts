@@ -15,11 +15,6 @@ export class DeletePostController {
       return res.status(204).send();
     } catch (error) {
       return next(error)
-      // const status = (error as any)?.status || 400;
-      // if (error instanceof Error) {
-      //   return res.status(status).json({ error: error.message });
-      // }
-      // return res.status(500).json({ error: 'Erro interno do servidor' });
     }
   }
 }

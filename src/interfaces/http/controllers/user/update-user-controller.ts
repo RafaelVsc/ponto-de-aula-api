@@ -25,19 +25,6 @@ export class UpdateUserController {
             });
         } catch (error) {
             return next(error)
-            // const status = (error as any)?.status || 400;
-            
-            // if (error instanceof Error) {
-            //     return res.status(status).json({
-            //         status: 'error',
-            //         message: error.message
-            //     });
-            // }
-            
-            // return res.status(500).json({
-            //     status: 'error',
-            //     message: 'Erro interno do servidor'
-            // });
         }
     }
 }

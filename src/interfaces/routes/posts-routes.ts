@@ -13,14 +13,14 @@ import { Router } from 'express';
 
 export default (
   router: Router,
-  postController: CreatePostController,
+  createPostController: CreatePostController,
   listPostController: ListAllPostsController,
   updatePostController: UpdatePostController,
   deletePostController: DeletePostController,
 ): void => {
   // Rota POST com middleware de validação Zod
-  router.post('/', validateBody(createPostSchema), (req, res, next) => postController.create(req, res, next));
-  router.get('/', validateQuery(searchQuerySchema), (req, res, next) => listPostController.listAll(req, res, next));
+  router.post('/', validateBody(createPostSchema), (req, res, next) => createPostController.create(req, res, next));
+  router.get('/', validateQuery(searchQuerySchema), (req, res, next) => listPostController.search(req, res, next));
   router.get('/:id', validateParams(uuidParamSchema), (req, res, next) => listPostController.findById(req, res, next));
   router.patch('/:id', validateParams(uuidParamSchema), validateBody(updatePostSchema), (req, res, next) =>
     updatePostController.update(req, res, next),

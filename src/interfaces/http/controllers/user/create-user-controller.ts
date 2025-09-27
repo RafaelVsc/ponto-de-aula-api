@@ -15,17 +15,6 @@ export class CreateUserController {
       });
     } catch (error) {
       return next(error)
-      // if (error instanceof Error) {
-      //   return res.status(400).json({
-      //     status: 'error',
-      //     message: error.message,
-      //   });
-      // }
-
-      // return res.status(500).json({
-      //   status: 'error',
-      //   message: 'Erro interno do servidor',
-      // });
     }
   }
 }
