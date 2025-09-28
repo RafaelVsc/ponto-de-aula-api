@@ -1,24 +1,21 @@
 import { Post } from '../../domain/entities/Post';
 import { FindPostsParams } from '../../domain/repositories/posts/find-posts-params';
 import { PostRepository } from '../../domain/repositories/posts/post-repository';
+import { randomUUID } from 'crypto';
 
 export class InMemoryPostRepository implements PostRepository {
   private posts: Post[] = [];
-  private nextId = 1;
 
   async findById(id: string): Promise<Post | null> {
-    const post = this.posts.find(post => post.id === id);
-    return post || null;
+    return this.posts.find(post => post.id === id) ?? null;
   }
 
   async findAll(params?: FindPostsParams): Promise<Post[]> {
-    if (!params) {
-      return [...this.posts];
-    }
+    if (!params) return [...this.posts];
 
     let filteredPosts = [...this.posts];
 
-    // Filtrar por termos de busca
+    // 🔍 Busca por texto (title ou content, contains)
     if (params.search) {
       const searchLower = params.search.toLowerCase();
       filteredPosts = filteredPosts.filter(
@@ -28,26 +25,30 @@ export class InMemoryPostRepository implements PostRepository {
       );
     }
 
-    // Filtrar por tag
+    // 🏷️ Filtrar por tag (case-insensitive)
     if (params.tag) {
-      filteredPosts = filteredPosts.filter(post => post.tags?.includes(params.tag!));
+      const tagLower = params.tag.toLowerCase();
+      filteredPosts = filteredPosts.filter(post =>
+        post.tags?.some(t => t.toLowerCase() === tagLower),
+      );
     }
 
-    // Filtrar por autor
+    // 👤 Filtrar por autor
     if (params.authorId) {
       filteredPosts = filteredPosts.filter(post => post.authorId === params.authorId);
     }
 
-    // Ordenar resultados
+    // 🗂️ Ordenação
     if (params.sortBy) {
       filteredPosts.sort((a, b) => {
         if (params.sortBy === 'title') {
           return params.sortOrder === 'desc'
             ? b.title.localeCompare(a.title)
             : a.title.localeCompare(b.title);
-        } else if (params.sortBy === 'createdAt') {
-          const dateA = a.createdAt || new Date();
-          const dateB = b.createdAt || new Date();
+        }
+        if (params.sortBy === 'createdAt') {
+          const dateA = a.createdAt ?? new Date(0);
+          const dateB = b.createdAt ?? new Date(0);
           return params.sortOrder === 'desc'
             ? dateB.getTime() - dateA.getTime()
             : dateA.getTime() - dateB.getTime();
@@ -56,7 +57,7 @@ export class InMemoryPostRepository implements PostRepository {
       });
     }
 
-    // Implementar paginação
+    // 📄 Paginação (offset)
     if (params.page !== undefined && params.limit !== undefined) {
       const startIndex = (params.page - 1) * params.limit;
       const endIndex = startIndex + params.limit;
@@ -75,9 +76,6 @@ export class InMemoryPostRepository implements PostRepository {
     const updated: Post = {
       ...current,
       ...data,
-      title: data.title ?? current.title,
-      content: data.content ?? current.content,
-      authorId: data.authorId ?? current.authorId,
       updatedAt: now,
     };
 
@@ -86,17 +84,14 @@ export class InMemoryPostRepository implements PostRepository {
   }
 
   async delete(id: string): Promise<void> {
-    const index = this.posts.findIndex(post => post.id === id);
-    if (index !== -1) {
-      this.posts.splice(index, 1);
-    }
+    this.posts = this.posts.filter(post => post.id !== id);
   }
 
   async create(post: Post): Promise<Post> {
     const now = new Date();
     const newPost: Post = {
       ...post,
-      id: String(this.nextId++),
+      id: randomUUID(),
       createdAt: now,
       updatedAt: now,
       tags: post.tags ?? [],

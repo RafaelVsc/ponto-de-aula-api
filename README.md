@@ -4,7 +4,7 @@ API em Node.js + TypeScript com Express, organizada em Clean Architecture. Inclu
 
 ## Como rodar
 
-- Requisitos: Node 18+.
+- Requisitos: Node 22+.
 - Desenvolvimento: `npm run dev` (inicia com ts-node-dev)
 - Build: `npm run build` (gera `dist/`)
 - Produção: `npm start` (executa `dist/main/server.js`)
