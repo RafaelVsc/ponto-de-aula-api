@@ -9,5 +9,5 @@ export const updatePostSchema = z
     tags: z.array(z.string()).optional(),
   })
   .refine(data => Object.keys(data).length > 0, {
-    message: 'Você deve fornecer pelo menos um campo para atualizar',
+    message: 'You must provide at least one field to update',
   });

@@ -4,7 +4,7 @@ import { InMemoryUserRepository } from '@/infrastructure/database/in-memory-user
 import { BcryptHasher } from '@/infrastructure/security/bcrypt-hasher';
 import { CreateUserController } from '@/interfaces/http/controllers/user/create-user-controller';
 import { UpdateUserController } from '@/interfaces/http/controllers/user/update-user-controller';
-import userRoutes from '@/interfaces/routes/user-routes';
+import userRoutes from '@/interfaces/routes/users-routes';
 import { Router } from 'express';
 
 export function buildUserModule(): Router {

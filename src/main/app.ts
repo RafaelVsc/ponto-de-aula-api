@@ -11,7 +11,7 @@ export function buildApp() {
 
   // Routes
   app.use('/posts', buildPostsModule());
-  app.use('/user', buildUserModule());
+  app.use('/users', buildUserModule());
 
   // Health check
   app.get('/health', (_req, res) => {

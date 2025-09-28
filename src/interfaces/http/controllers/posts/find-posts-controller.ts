@@ -2,8 +2,6 @@ import { GetPostByIdUseCase } from '@/application/usecases/posts/get-posts-by-id
 import { ListPostsUseCase } from '@/application/usecases/posts/list-posts-use-case';
 import { SearchPostsUseCase } from '@/application/usecases/posts/search-posts-use-case';
 import { NextFunction, Request, Response } from 'express';
-import z from 'zod';
-import { searchQuerySchema } from '@/interfaces/http/validators/post/search-post-validator';
 
 
 export class ListAllPostsController {
@@ -15,11 +13,9 @@ export class ListAllPostsController {
 
   async findById(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
-      const postId = req.params.id;
-      if (!postId) {
-        return res.status(400).json({ error: 'Parâmetro id é obrigatório' });
-      }
-
+      // O parâmetro 'id' já foi validado pelo middleware de rota (uuidParamSchema)
+      // Aqui assumimos que 'postId' é sempre uma string válida
+      const postId = req.params.id as string;
       const foundPost = await this.getPostByIdUseCase.execute(postId);
       return res.status(200).json({ data: foundPost });
     } catch (error) {
@@ -39,11 +35,6 @@ export class ListAllPostsController {
   async search(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
       const { search, tag, authorId, page, limit, sortBy, sortOrder } = req.query as any;
-
-      // if (!search && !tag && !authorId) {
-      //   const posts = await this.listPostUseCase.execute();
-      //   return res.status(200).json({ data: posts });
-      // }
 
       const posts = await this.searchPostsUseCase.execute({
         search,
