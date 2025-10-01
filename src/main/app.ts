@@ -2,6 +2,7 @@ import express from 'express';
 import { buildPostsModule } from '@/main/modules/posts/posts.module';
 import { errorHandler, notFound } from '@/interfaces/http/middlewares/error-handler';
 import { buildUserModule } from './modules/users/users.module';
+import { authenticate } from '@/interfaces/http/middlewares/authenticate';
 
 export function buildApp() {
   const app = express();
@@ -12,6 +13,7 @@ export function buildApp() {
   // Routes
   app.use('/posts', buildPostsModule());
   app.use('/users', buildUserModule());
+  app.use(authenticate)
 
   // Health check
   app.get('/health', (_req, res) => {
