@@ -1,9 +1,39 @@
-import { User } from '@/domain/entities/User';
+import { User, UserRole } from '@/domain/entities/User';
 import { UserRepository } from '@/domain/repositories/users/user-repository';
 import { randomUUID } from 'crypto';
+import { BcryptHasher } from '../security/bcrypt-hasher';
 
 export class InMemoryUserRepository implements UserRepository {
   private users: User[] = [];
+
+    constructor() {
+    // seed dev: usuário admin para facilitar testes locais
+    (async () => {
+      try {
+        const hasher = new BcryptHasher();
+        const hashed = await hasher.hash('12345678'); // senha de seed
+        const now = new Date();
+
+        const exists = this.users.find(
+          u => u.email === 'admin@example.com' || u.username === 'admin'
+        );
+        if (!exists) {
+          this.users.push({
+            id: randomUUID(),
+            name: 'Seed Admin',
+            username: 'admin',
+            email: 'admin@example.com',
+            password: hashed,
+            role: UserRole.ADMIN,
+            registeredAt: now, // mantém o mesmo campo usado pelo repositório
+          });
+        }
+      } catch (err) {
+        // não propagar erro na inicialização
+        // console.warn('Seed user creation failed', err);
+      }
+    })();
+  }
 
   async findById(id: string): Promise<User | null> {
     return this.users.find(user => user.id === id) ?? null;
