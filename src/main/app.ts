@@ -16,9 +16,7 @@ export function buildApp() {
 
   // Routes
   app.use('/auth/', buildAuthModule(userRepository));
-  app.use(authenticate)
-  app.use('/posts', buildPostsModule());
-  app.use('/users', buildUserModule(userRepository));
+
 
   // Health check
   app.get('/health', (_req, res) => {
@@ -28,6 +26,10 @@ export function buildApp() {
   app.get('/', (_req, res) => {
     res.json({ message: 'API Tech Challenge Fase 2 - FIAP' });
   });
+
+  app.use(authenticate)
+  app.use('/posts', buildPostsModule());
+  app.use('/users', buildUserModule(userRepository));
 
   // 404 + Error handlers
   app.use(notFound);
