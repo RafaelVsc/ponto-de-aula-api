@@ -2,13 +2,18 @@ import { Request, Response, NextFunction } from 'express';
 import { CreatePostUseCase } from '@/application/usecases/posts/create-post-use-case';
 
 export class CreatePostController {
-  constructor(private createPostUseCase: CreatePostUseCase) {}
+  constructor(private createPostUseCase: CreatePostUseCase) { }
 
   async create(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
+      const userId = res.locals.auth.userId;
       // Como o middleware de validação já validou os dados,
       // podemos apenas enviar para o caso de uso
-      const result = await this.createPostUseCase.execute(req.body);
+      const dto = {
+        ...req.body,
+        authorId: userId,
+      }
+      const result = await this.createPostUseCase.execute(dto);
 
       return res.status(201).json({
         status: 'success',
