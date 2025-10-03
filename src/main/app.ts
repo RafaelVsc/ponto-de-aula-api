@@ -4,6 +4,7 @@ import { errorHandler, notFound } from '@/interfaces/http/middlewares/error-hand
 import { buildUserModule } from './modules/users/users.module';
 import { authenticate } from '@/interfaces/http/middlewares/authenticate';
 import { buildAuthModule } from './modules/auth/auth.module';
+import { InMemoryUserRepository } from '@/infrastructure/database/in-memory-user-repository';
 
 export function buildApp() {
   const app = express();
@@ -11,11 +12,13 @@ export function buildApp() {
   // Middlewares
   app.use(express.json());
 
+  const userRepository = new InMemoryUserRepository();
+
   // Routes
-  app.use('/auth/', buildAuthModule());
+  app.use('/auth/', buildAuthModule(userRepository));
   app.use(authenticate)
   app.use('/posts', buildPostsModule());
-  app.use('/users', buildUserModule());
+  app.use('/users', buildUserModule(userRepository));
 
   // Health check
   app.get('/health', (_req, res) => {

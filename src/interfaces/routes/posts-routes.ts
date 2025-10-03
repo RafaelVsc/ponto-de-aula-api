@@ -1,7 +1,9 @@
+import { UserRole } from '@/domain/entities/User';
 import { CreatePostController } from '@/interfaces/http/controllers/posts/create-post-controller';
 import { DeletePostController } from '@/interfaces/http/controllers/posts/delete-post-controller';
 import { ListAllPostsController } from '@/interfaces/http/controllers/posts/find-posts-controller';
 import { UpdatePostController } from '@/interfaces/http/controllers/posts/update-post-controller';
+import { authorize } from '@/interfaces/http/middlewares/authorize';
 import { validateParams } from '@/interfaces/http/middlewares/params-validator';
 import { validateQuery } from '@/interfaces/http/middlewares/query-validator';
 import { validateBody } from '@/interfaces/http/middlewares/validation-middleware';
@@ -19,11 +21,19 @@ export default (
   deletePostController: DeletePostController,
 ): void => {
   // Rota POST com middleware de validação Zod
-  router.post('/', validateBody(createPostSchema), (req, res, next) => createPostController.create(req, res, next));
+  router.post('/',
+    authorize(UserRole.ADMIN, UserRole.SECRETARY, UserRole.TEACHER),
+    validateBody(createPostSchema),
+    (req, res, next) => createPostController.create(req, res, next));
   router.get('/', validateQuery(searchQuerySchema), (req, res, next) => listPostController.search(req, res, next));
   router.get('/:id', validateParams(uuidParamSchema), (req, res, next) => listPostController.findById(req, res, next));
-  router.patch('/:id', validateParams(uuidParamSchema), validateBody(updatePostSchema), (req, res, next) =>
-    updatePostController.update(req, res, next),
+  router.patch('/:id',
+    authorize(UserRole.ADMIN, UserRole.SECRETARY, UserRole.TEACHER),
+    validateParams(uuidParamSchema), validateBody(updatePostSchema),
+    (req, res, next) => updatePostController.update(req, res, next),
   );
-  router.delete('/:id', validateParams(uuidParamSchema), (req, res, next) => deletePostController.delete(req, res, next));
+  router.delete('/:id',
+    authorize(UserRole.ADMIN, UserRole.SECRETARY, UserRole.TEACHER),
+    validateParams(uuidParamSchema),
+    (req, res, next) => deletePostController.delete(req, res, next));
 };

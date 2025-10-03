@@ -6,9 +6,8 @@ import { LoginController } from "@/interfaces/http/controllers/auth/login-contro
 import authRoutes from "@/interfaces/routes/auth-routes";
 import { Router } from "express";
 
-export function buildAuthModule(): Router {
+export function buildAuthModule(userRepository: InMemoryUserRepository): Router {
   // Criar instâncias das dependências
-  const userRepository = new InMemoryUserRepository();
   const passwordHasher = new BcryptHasher();
   const jwtService = new JwtService(process.env.JWT_SECRET || 'dev-secret');
   

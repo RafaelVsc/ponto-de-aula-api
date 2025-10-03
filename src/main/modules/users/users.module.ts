@@ -7,8 +7,7 @@ import { UpdateUserController } from '@/interfaces/http/controllers/user/update-
 import userRoutes from '@/interfaces/routes/users-routes';
 import { Router } from 'express';
 
-export function buildUserModule(): Router {
-  const userRepository = new InMemoryUserRepository();
+export function buildUserModule(userRepository: InMemoryUserRepository): Router {
   const passwordHasher = new BcryptHasher();
   const createUserUseCase = new CreateUserUseCase(userRepository, passwordHasher);
   const userController = new CreateUserController(createUserUseCase);
