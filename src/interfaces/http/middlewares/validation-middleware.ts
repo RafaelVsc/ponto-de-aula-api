@@ -4,10 +4,11 @@ import { z, ZodError } from 'zod';
 
 // Middleware de validação simplificado com Zod
 export const validateBody = (schema: z.ZodType<any>) => {
-  return (req: Request, _res: Response, next: NextFunction) => {
+  return async (req: Request, _res: Response, next: NextFunction) => {
     try {
       // Valida o corpo da requisição com o schema fornecido
-      schema.parse(req.body);
+      const validated = await schema.parseAsync(req.body);
+      req.body = validated;
       next();
     } catch (error) {
       // Se houver erro de validação, retorna 400 com formato simplificado

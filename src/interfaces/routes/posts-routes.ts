@@ -28,8 +28,9 @@ export default (
   router.get('/', validateQuery(searchQuerySchema), (req, res, next) => listPostController.search(req, res, next));
   router.get('/:id', validateParams(uuidParamSchema), (req, res, next) => listPostController.findById(req, res, next));
   router.patch('/:id',
+    validateParams(uuidParamSchema), 
+    validateBody(updatePostSchema),
     authorize(UserRole.ADMIN, UserRole.SECRETARY, UserRole.TEACHER),
-    validateParams(uuidParamSchema), validateBody(updatePostSchema),
     (req, res, next) => updatePostController.update(req, res, next),
   );
   router.delete('/:id',
