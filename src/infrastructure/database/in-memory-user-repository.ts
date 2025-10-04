@@ -6,33 +6,67 @@ import { BcryptHasher } from '../security/bcrypt-hasher';
 export class InMemoryUserRepository implements UserRepository {
   private users: User[] = [];
 
-    constructor() {
-    // seed dev: usuário admin para facilitar testes locais
-    (async () => {
-      try {
-        const hasher = new BcryptHasher();
-        const hashed = await hasher.hash('12345678'); // senha de seed
-        const now = new Date();
+constructor() {
+  (async () => {
+    try {
+      const hasher = new BcryptHasher();
+      const now = new Date();
+      const seeds = [
+        {
+          name: 'Seed Admin',
+          username: 'admin2025',
+          email: 'admin@example.com',
+          role: UserRole.ADMIN,
+        },
+        {
+          name: 'Seed Secretary',
+          username: 'secretary2025',
+          email: 'secretary@example.com',
+          role: UserRole.SECRETARY,
+        },
+        {
+          name: 'Seed Teacher',
+          username: 'teacher2025',
+          email: 'teacher@example.com',
+          role: UserRole.TEACHER,
+        },
+        {
+          name: 'Seed Student',
+          username: 'student2025',
+          email: 'student@example.com',
+          role: UserRole.STUDENT,
+        },
+      ];
 
+      for (const seed of seeds) {
         const exists = this.users.find(
-          u => u.email === 'admin@example.com' || u.username === 'admin'
+          u => u.email === seed.email || u.username === seed.username
         );
         if (!exists) {
+          const hashed = await hasher.hash('12345678');
           this.users.push({
             id: randomUUID(),
-            name: 'Seed Admin',
-            username: 'admin2025',
-            email: 'admin@example.com',
+            name: seed.name,
+            username: seed.username,
+            email: seed.email,
             password: hashed,
-            role: UserRole.ADMIN,
-            registeredAt: now, // mantém o mesmo campo usado pelo repositório
+            role: seed.role,
+            registeredAt: now,
           });
         }
-      } catch (err) {
-        // não propagar erro na inicialização
-        // console.warn('Seed user creation failed', err);
       }
-    })();
+    } catch (err) {
+      // não propagar erro na inicialização
+    }
+  })();
+}
+
+  async findAll(filter?: { roles?: UserRole[] }): Promise<User[]> {
+    let result = [...this.users];
+    if (filter?.roles) {
+      result = result.filter(user => filter.roles!.includes(user.role));
+    }
+    return result;
   }
 
   async findById(id: string): Promise<User | null> {
