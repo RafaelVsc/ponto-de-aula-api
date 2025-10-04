@@ -22,14 +22,9 @@ export class LoginUseCase {
             ? await this.userRepository.findByEmail(email)
             : await this.userRepository.findByUsername(username!);
 
-        console.log('Tentando login:', { email, username });
-        console.log('Usuário encontrado:', user);
-
         if (!user?.id) throw new AppError('Invalid credentials', 401);
 
         const isValid = await this.passwordHasher.compare(password, user.password);
-        console.log(isValid)
-        console.log(password, user.password)
         if (!isValid) throw new AppError('Invalid credentials', 401);
 
         const token = this.jwtService.sign({ userId: user.id, role: user.role });

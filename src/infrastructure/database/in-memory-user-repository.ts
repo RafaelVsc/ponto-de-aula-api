@@ -40,7 +40,6 @@ export class InMemoryUserRepository implements UserRepository {
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    console.log('Buscando por email:', email, this.users.map(u => u.email));
     return this.users.find(user => user.email === email) ?? null;
   }
 
@@ -57,7 +56,6 @@ export class InMemoryUserRepository implements UserRepository {
     };
 
     this.users.push(newUser);
-    console.log(newUser)
     return newUser;
   }
 
