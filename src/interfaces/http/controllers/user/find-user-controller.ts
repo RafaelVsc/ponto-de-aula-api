@@ -10,7 +10,8 @@ export class FindUserController {
     async findById(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
         try {
             const userId = req.params.id as string;
-            const foundUser = await this.findUserUseCase.execute(userId);
+            const currentUser = res.locals.auth; // pega id e role do usuário autenticado
+            const foundUser = await this.findUserUseCase.execute(userId, currentUser);
             return res.status(200).json({ data: foundUser });
         } catch (error) {
             next(error)

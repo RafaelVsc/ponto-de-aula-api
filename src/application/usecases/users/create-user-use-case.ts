@@ -10,8 +10,14 @@ export class CreateUserUseCase {
     private passwordHasher: PasswordHasher,
   ) {}
 
-  async execute(input: CreateUserInputDTO): Promise<CreateUserOutputDTO> {
+  async execute(input: CreateUserInputDTO, currentUserRole: UserRole): Promise<CreateUserOutputDTO> {
     const { name, email, password, role, username } = input;
+
+    if(currentUserRole === UserRole.SECRETARY) {
+      if(![UserRole.STUDENT, UserRole.TEACHER].includes(role)) {
+        throw new AppError('SECRETARY can only create STUDENT or TEACHER', 403)
+      }
+    }
 
     const emailExist = await this.userRepository.findByEmail(email);
     if (emailExist) throw new AppError('Email already registered', 400);
