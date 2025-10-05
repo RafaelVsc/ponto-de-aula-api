@@ -1,6 +1,7 @@
 import { GetPostByIdUseCase } from '@/application/usecases/posts/get-posts-by-id-use-case';
 import { ListPostsUseCase } from '@/application/usecases/posts/list-posts-use-case';
 import { SearchPostsUseCase } from '@/application/usecases/posts/search-posts-use-case';
+import { UserRole } from '@/domain/entities/User';
 import { NextFunction, Request, Response } from 'express';
 
 
@@ -48,6 +49,25 @@ export class ListAllPostsController {
 
       return res.status(200).json({ data: posts })
 
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async myPosts(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+    try {
+      const { search, tag, page, limit, sortBy, sortOrder } = req.query as any;
+      const currentUser = res.locals.auth as { id: string; role: UserRole }
+      const posts = await this.searchPostsUseCase.execute({
+        search,
+        tag,
+        authorId: currentUser.id,
+        page,
+        limit,
+        sortBy,
+        sortOrder
+      });
+      return res.status(200).json({ data: posts })
     } catch (error) {
       next(error)
     }

@@ -25,10 +25,20 @@ export default (
     authorize(UserRole.ADMIN, UserRole.SECRETARY, UserRole.TEACHER),
     validateBody(createPostSchema),
     (req, res, next) => createPostController.create(req, res, next));
+
   router.get('/', validateQuery(searchQuerySchema), (req, res, next) => listPostController.search(req, res, next));
+  
+  router.get('/mine',
+    validateQuery(searchQuerySchema),
+    authorize(UserRole.ADMIN, UserRole.SECRETARY, UserRole.TEACHER),
+    (req, res, next) => listPostController.myPosts(req, res, next));
+
+
   router.get('/:id', validateParams(uuidParamSchema), (req, res, next) => listPostController.findById(req, res, next));
+  // Novo endpoint: GET /posts/mine — retorna apenas os posts do autor autenticado
+
   router.patch('/:id',
-    validateParams(uuidParamSchema), 
+    validateParams(uuidParamSchema),
     validateBody(updatePostSchema),
     authorize(UserRole.ADMIN, UserRole.SECRETARY, UserRole.TEACHER),
     (req, res, next) => updatePostController.update(req, res, next),
