@@ -6,7 +6,7 @@ export class CreatePostController {
 
   async create(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
-      const userId = res.locals.auth.userId;
+      const userId = res.locals.auth.id;
       // Como o middleware de validação já validou os dados,
       // podemos apenas enviar para o caso de uso
       const dto = {

@@ -9,7 +9,7 @@ export class UpdatePostController {
       // O parâmetro 'id' já foi validado pelo middleware de rota (uuidParamSchema)
       // Aqui assumimos que 'postId' é sempre uma string válida
       const postId = req.params.id as string;
-      const userId = res.locals.auth.userId;
+      const userId = res.locals.auth.id;
       const updated = await this.updatePostUseCase.execute(postId, req.body, userId);
       return res.status(200).json({ data: updated });
     } catch (error) {
