@@ -1,4 +1,7 @@
-import { ChangePasswordInputDTO, ChangePasswordOutputDTO } from '@/application/dto/ChangePasswordDTO';
+import {
+  ChangePasswordInputDTO,
+  ChangePasswordOutputDTO,
+} from '@/application/dto/ChangePasswordDTO';
 import { PasswordHasher } from '@/application/services/password-hasher';
 import { UserRepository } from '@/domain/repositories/users/user-repository';
 import { AppError } from '@/shared/errors/app-error';
@@ -7,7 +10,7 @@ export class ChangePasswordUseCase {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly passwordHasher: PasswordHasher,
-  ) { }
+  ) {}
 
   async execute(userId: string, data: ChangePasswordInputDTO): Promise<ChangePasswordOutputDTO> {
     const { currentPassword, newPassword } = data;
@@ -33,7 +36,7 @@ export class ChangePasswordUseCase {
     const hashedPassword = await this.passwordHasher.hash(newPassword);
     const updated = await this.userRepository.update(userId, {
       password: hashedPassword,
-      updatedAt: new Date()
+      updatedAt: new Date(),
     });
 
     if (!updated) {
@@ -42,7 +45,7 @@ export class ChangePasswordUseCase {
 
     return {
       success: true,
-      message: 'Password updated successfully'
+      message: 'Password updated successfully',
     };
   }
 }

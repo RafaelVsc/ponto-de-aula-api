@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { CreatePostUseCase } from '@/application/usecases/posts/create-post-use-case';
 
 export class CreatePostController {
-  constructor(private createPostUseCase: CreatePostUseCase) { }
+  constructor(private createPostUseCase: CreatePostUseCase) {}
 
   async create(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
@@ -12,7 +12,7 @@ export class CreatePostController {
       const dto = {
         ...req.body,
         authorId: userId,
-      }
+      };
       const result = await this.createPostUseCase.execute(dto);
 
       return res.status(201).json({
@@ -21,7 +21,7 @@ export class CreatePostController {
         data: result,
       });
     } catch (error) {
-      return next(error)
+      return next(error);
     }
   }
 }

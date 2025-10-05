@@ -11,13 +11,17 @@ export const validateParams = (schema: z.ZodType<any>) => {
       // Se houver erro de validação, retorna 400 com formato simplificado
       if (error instanceof ZodError) {
         return next(
-          new AppError('Invalid request', 400, error.issues.map(issue => ({
-            path: issue.path,
-            message: issue.message
-          })))
-        )
+          new AppError(
+            'Invalid request',
+            400,
+            error.issues.map(issue => ({
+              path: issue.path,
+              message: issue.message,
+            })),
+          ),
+        );
       }
       return next(error);
     }
-  }
-}
+  };
+};

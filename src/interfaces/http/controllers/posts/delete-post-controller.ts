@@ -2,7 +2,7 @@ import { DeletePostUseCase } from '@/application/usecases/posts/delete-post-use-
 import { Request, Response, NextFunction } from 'express';
 
 export class DeletePostController {
-  constructor(private deletePostUseCase: DeletePostUseCase) { }
+  constructor(private deletePostUseCase: DeletePostUseCase) {}
 
   async delete(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
@@ -14,7 +14,7 @@ export class DeletePostController {
       await this.deletePostUseCase.execute(postId, userId, role);
       return res.status(204).send();
     } catch (error) {
-      return next(error)
+      return next(error);
     }
   }
 }

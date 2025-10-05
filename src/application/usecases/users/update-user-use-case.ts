@@ -5,13 +5,15 @@ import { UserRepository } from '@/domain/repositories/users/user-repository';
 import { AppError } from '@/shared/errors/app-error';
 
 export class UpdateUserUseCase {
-  constructor(
-    private readonly userRepository: UserRepository
-  ) { }
+  constructor(private readonly userRepository: UserRepository) {}
 
-  async execute(id: string, data: UpdateUserInputDTO, currentUser: { id: string, role: UserRole }): Promise<UpdateUserOutputDTO> {
+  async execute(
+    id: string,
+    data: UpdateUserInputDTO,
+    currentUser: { id: string; role: UserRole },
+  ): Promise<UpdateUserOutputDTO> {
     if (currentUser.role !== UserRole.ADMIN && currentUser.id !== id) {
-      throw new AppError('Forbidden', 403)
+      throw new AppError('Forbidden', 403);
     }
 
     const current = await this.userRepository.findById(id);
@@ -37,6 +39,6 @@ export class UpdateUserUseCase {
       throw new AppError('Failed to update user', 500);
     }
 
-    return userToOutputDTO(updated)
+    return userToOutputDTO(updated);
   }
 }

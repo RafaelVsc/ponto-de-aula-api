@@ -3,7 +3,7 @@ import { UserRepository } from '@/domain/repositories/users/user-repository';
 import { AppError } from '@/shared/errors/app-error';
 
 export class DeleteUserUseCase {
-  constructor(private userRepository: UserRepository) { }
+  constructor(private userRepository: UserRepository) {}
 
   async execute(id: string, role: UserRole): Promise<void> {
     if (role !== UserRole.ADMIN) {

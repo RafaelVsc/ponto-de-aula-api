@@ -11,12 +11,15 @@ export class CreateUserUseCase {
     private passwordHasher: PasswordHasher,
   ) {}
 
-  async execute(input: CreateUserInputDTO, currentUserRole: UserRole): Promise<CreateUserOutputDTO> {
+  async execute(
+    input: CreateUserInputDTO,
+    currentUserRole: UserRole,
+  ): Promise<CreateUserOutputDTO> {
     const { name, email, password, role, username } = input;
 
-    if(currentUserRole === UserRole.SECRETARY) {
-      if(![UserRole.STUDENT, UserRole.TEACHER].includes(role)) {
-        throw new AppError('SECRETARY can only create STUDENT or TEACHER', 403)
+    if (currentUserRole === UserRole.SECRETARY) {
+      if (![UserRole.STUDENT, UserRole.TEACHER].includes(role)) {
+        throw new AppError('SECRETARY can only create STUDENT or TEACHER', 403);
       }
     }
 

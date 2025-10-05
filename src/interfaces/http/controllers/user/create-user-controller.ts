@@ -15,7 +15,7 @@ export class CreateUserController {
         data: result,
       });
     } catch (error) {
-      return next(error)
+      return next(error);
     }
   }
 }

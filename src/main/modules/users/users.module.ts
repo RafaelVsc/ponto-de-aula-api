@@ -19,7 +19,7 @@ export function buildUserModule(userRepository: InMemoryUserRepository): Router 
   const passwordHasher = new BcryptHasher();
 
   const listUsersUseCase = new ListUsersUseCase(userRepository);
-  const listUserController = new ListUserController(listUsersUseCase)
+  const listUserController = new ListUserController(listUsersUseCase);
 
   const findUserUseCase = new FindUserUseCase(userRepository);
   const findUserController = new FindUserController(findUserUseCase);
@@ -44,7 +44,7 @@ export function buildUserModule(userRepository: InMemoryUserRepository): Router 
     createUserController,
     updateUserController,
     deleteUserController,
-    changePasswordController
+    changePasswordController,
   );
   return router;
 }

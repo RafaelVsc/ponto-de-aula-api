@@ -23,42 +23,42 @@ export default (
   deleteUserController: DeleteUserController,
   changePassword: ChangePasswordController,
 ): void => {
-  router.post('/',
+  router.post(
+    '/',
     authorize(UserRole.ADMIN, UserRole.SECRETARY),
     validateBody(createUserSchema),
-    (req, res, next) => createUserController.create(req, res, next));
-
-  router.get('/',
-    authorize(UserRole.ADMIN, UserRole.SECRETARY),
-    (req, res, next) => listUserController.list(req, res, next));
-
-  router.get('/me',
-    (req, res, next) => findUserController.findMe(req, res, next));
-
-  router.put('/me/password',
-    validateBody(changePasswordSchema),
-    (req, res, next) => changePassword.changePassword(req, res, next));
-
-  // Rota adicional para self-update (qualquer usuário pode atualizar a si mesmo)
-  router.patch('/me',
-    validateBody(updateUserSchema),
-    (req, res, next) => {
-      // Redireciona para o controller principal usando o ID do usuário autenticado
-      req.params.id = res.locals.auth.id;
-      updateUserController.update(req, res, next);
-    }
+    (req, res, next) => createUserController.create(req, res, next),
   );
 
-  router.patch('/:id',
+  router.get('/', authorize(UserRole.ADMIN, UserRole.SECRETARY), (req, res, next) =>
+    listUserController.list(req, res, next),
+  );
+
+  router.get('/me', (req, res, next) => findUserController.findMe(req, res, next));
+
+  router.put('/me/password', validateBody(changePasswordSchema), (req, res, next) =>
+    changePassword.changePassword(req, res, next),
+  );
+
+  // Rota adicional para self-update (qualquer usuário pode atualizar a si mesmo)
+  router.patch('/me', validateBody(updateUserSchema), (req, res, next) => {
+    // Redireciona para o controller principal usando o ID do usuário autenticado
+    req.params.id = res.locals.auth.id;
+    updateUserController.update(req, res, next);
+  });
+
+  router.patch(
+    '/:id',
     authorize(UserRole.ADMIN),
     validateParams(uuidParamSchema),
-    validateBody(updateUserSchema), (req, res, next) => updateUserController.update(req, res, next));
+    validateBody(updateUserSchema),
+    (req, res, next) => updateUserController.update(req, res, next),
+  );
 
-
-
-  router.delete('/:id',
+  router.delete(
+    '/:id',
     authorize(UserRole.ADMIN),
     validateParams(uuidParamSchema),
-    (req, res, next) => deleteUserController.delete(req, res, next)
+    (req, res, next) => deleteUserController.delete(req, res, next),
   );
 };

@@ -2,7 +2,7 @@ import { UpdatePostUseCase } from '@/application/usecases/posts/update-post-use-
 import { NextFunction, Request, Response } from 'express';
 
 export class UpdatePostController {
-  constructor(private updatePostUseCase: UpdatePostUseCase) { }
+  constructor(private updatePostUseCase: UpdatePostUseCase) {}
 
   async update(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
@@ -13,7 +13,7 @@ export class UpdatePostController {
       const updated = await this.updatePostUseCase.execute(postId, req.body, userId);
       return res.status(200).json({ data: updated });
     } catch (error) {
-      return next(error)
+      return next(error);
     }
   }
 }

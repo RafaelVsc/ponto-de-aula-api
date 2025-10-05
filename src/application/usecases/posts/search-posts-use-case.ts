@@ -5,7 +5,7 @@ import { postsToOutputDTO } from '@/application/mappers/post-mapper';
 import { PostOutputDTO } from '@/application/dto/PostDTO';
 
 export class SearchPostsUseCase {
-  constructor(private postRepository: PostRepository) { }
+  constructor(private postRepository: PostRepository) {}
 
   async execute(params: FindPostsParams): Promise<PostOutputDTO[]> {
     // validação defensiva: authorId opcional e string quando presente
@@ -14,6 +14,6 @@ export class SearchPostsUseCase {
     }
 
     const posts = await this.postRepository.findAll(params);
-    return postsToOutputDTO(posts)
+    return postsToOutputDTO(posts);
   }
 }

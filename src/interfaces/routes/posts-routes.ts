@@ -21,30 +21,40 @@ export default (
   deletePostController: DeletePostController,
 ): void => {
   // Rota POST com middleware de validação Zod
-  router.post('/',
+  router.post(
+    '/',
     authorize(UserRole.ADMIN, UserRole.SECRETARY, UserRole.TEACHER),
     validateBody(createPostSchema),
-    (req, res, next) => createPostController.create(req, res, next));
+    (req, res, next) => createPostController.create(req, res, next),
+  );
 
-  router.get('/', validateQuery(searchQuerySchema), (req, res, next) => listPostController.search(req, res, next));
-  
-  router.get('/mine',
+  router.get('/', validateQuery(searchQuerySchema), (req, res, next) =>
+    listPostController.search(req, res, next),
+  );
+
+  router.get(
+    '/mine',
     validateQuery(searchQuerySchema),
     authorize(UserRole.ADMIN, UserRole.SECRETARY, UserRole.TEACHER),
-    (req, res, next) => listPostController.myPosts(req, res, next));
+    (req, res, next) => listPostController.myPosts(req, res, next),
+  );
 
-
-  router.get('/:id', validateParams(uuidParamSchema), (req, res, next) => listPostController.findById(req, res, next));
+  router.get('/:id', validateParams(uuidParamSchema), (req, res, next) =>
+    listPostController.findById(req, res, next),
+  );
   // Novo endpoint: GET /posts/mine — retorna apenas os posts do autor autenticado
 
-  router.patch('/:id',
+  router.patch(
+    '/:id',
     validateParams(uuidParamSchema),
     validateBody(updatePostSchema),
     authorize(UserRole.ADMIN, UserRole.SECRETARY, UserRole.TEACHER),
     (req, res, next) => updatePostController.update(req, res, next),
   );
-  router.delete('/:id',
+  router.delete(
+    '/:id',
     authorize(UserRole.ADMIN, UserRole.SECRETARY, UserRole.TEACHER),
     validateParams(uuidParamSchema),
-    (req, res, next) => deletePostController.delete(req, res, next));
+    (req, res, next) => deletePostController.delete(req, res, next),
+  );
 };

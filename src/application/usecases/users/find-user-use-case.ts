@@ -5,9 +5,12 @@ import { UserRepository } from '@/domain/repositories/users/user-repository';
 import { AppError } from '@/shared/errors/app-error';
 
 export class FindUserUseCase {
-  constructor(private userRepository: UserRepository) { }
+  constructor(private userRepository: UserRepository) {}
 
-  async execute(userId: string, currentUser: { id: string, role: UserRole }): Promise<UserOutputDTO> {
+  async execute(
+    userId: string,
+    currentUser: { id: string; role: UserRole },
+  ): Promise<UserOutputDTO> {
     const user = await this.userRepository.findById(userId);
     if (!user) {
       throw new AppError('User not found', 404);

@@ -17,7 +17,6 @@ export function buildApp() {
   // Routes
   app.use('/auth/', buildAuthModule(userRepository));
 
-
   // Health check
   app.get('/health', (_req, res) => {
     res.status(200).json({ status: 'ok' });
@@ -27,7 +26,7 @@ export function buildApp() {
     res.json({ message: 'API Tech Challenge Fase 2 - FIAP' });
   });
 
-  app.use(authenticate)
+  app.use(authenticate);
   app.use('/posts', buildPostsModule());
   app.use('/users', buildUserModule(userRepository));
 

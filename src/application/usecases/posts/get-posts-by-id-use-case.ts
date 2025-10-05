@@ -1,13 +1,14 @@
 import { PostOutputDTO } from '@/application/dto/PostDTO';
-import { postToOutputDTO } from '@/application/mappers/post-mapper';
+import { postToDetailedDTO } from '@/application/mappers/post-mapper';
+import { UserRepository } from '@/domain/repositories/users/user-repository';
 import { PostRepository } from '../../../domain/repositories/posts/post-repository';
 import { AppError } from '../../../shared/errors/app-error';
-import { UserRepository } from '@/domain/repositories/users/user-repository';
 
 export class GetPostByIdUseCase {
-  constructor(private postRepository: PostRepository,
-    private userRepository?: UserRepository
-  ) { }
+  constructor(
+    private postRepository: PostRepository,
+    private userRepository?: UserRepository,
+  ) {}
 
   async execute(id: string): Promise<PostOutputDTO> {
     const post = await this.postRepository.findById(id);
@@ -23,6 +24,6 @@ export class GetPostByIdUseCase {
         authorName = author.name;
       }
     }
-    return postToOutputDTO(post);
+    return postToDetailedDTO(post, authorName);
   }
 }
