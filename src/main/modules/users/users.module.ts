@@ -1,11 +1,13 @@
 import { CreateUserUseCase } from '@/application/usecases/users/create-user-use-case';
 import { DeleteUserUseCase } from '@/application/usecases/users/delete-user-use-case';
+import { FindUserUseCase } from '@/application/usecases/users/find-user-use-case';
 import { ListUsersUseCase } from '@/application/usecases/users/list-user-use-case';
 import { UpdateUserUseCase } from '@/application/usecases/users/update-user-use-case';
 import { InMemoryUserRepository } from '@/infrastructure/database/in-memory-user-repository';
 import { BcryptHasher } from '@/infrastructure/security/bcrypt-hasher';
 import { CreateUserController } from '@/interfaces/http/controllers/user/create-user-controller';
 import { DeleteUserController } from '@/interfaces/http/controllers/user/delete-user-controller';
+import { FindUserController } from '@/interfaces/http/controllers/user/find-user-controller';
 import { ListUserController } from '@/interfaces/http/controllers/user/list-user-controller';
 import { UpdateUserController } from '@/interfaces/http/controllers/user/update-user-controller';
 import userRoutes from '@/interfaces/routes/users-routes';
@@ -17,6 +19,9 @@ export function buildUserModule(userRepository: InMemoryUserRepository): Router 
   const listUsersUseCase = new ListUsersUseCase(userRepository);
   const listUserController = new ListUserController(listUsersUseCase)
 
+  const findUserUseCase = new FindUserUseCase(userRepository);
+  const findUserController = new FindUserController(findUserUseCase);
+
   const createUserUseCase = new CreateUserUseCase(userRepository, passwordHasher);
   const createUserController = new CreateUserController(createUserUseCase);
 
@@ -27,6 +32,13 @@ export function buildUserModule(userRepository: InMemoryUserRepository): Router 
   const deleteUserController = new DeleteUserController(deleteUserUseCase);
 
   const router = Router();
-  userRoutes(router, listUserController, createUserController, updateUserController, deleteUserController);
+  userRoutes(
+    router,
+    listUserController,
+    findUserController,
+    createUserController,
+    updateUserController,
+    deleteUserController
+  );
   return router;
 }

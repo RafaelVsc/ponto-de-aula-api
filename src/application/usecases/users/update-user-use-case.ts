@@ -1,4 +1,5 @@
 import { UpdateUserInputDTO, UpdateUserOutputDTO } from '@/application/dto/UpdateUserDTO';
+import { userToOutputDTO } from '@/application/mappers/user-mapper';
 import { PasswordHasher } from '@/application/services/password-hasher';
 import { User } from '@/domain/entities/User';
 import { UserRepository } from '@/domain/repositories/users/user-repository';
@@ -39,12 +40,6 @@ export class UpdateUserUseCase {
       throw new AppError('User not found', 404);
     }
 
-    return {
-      id: updated.id!,
-      name: updated.name,
-      email: updated.email,
-      username: updated.username ?? undefined,
-      role: updated.role,
-    };
+    return userToOutputDTO(updated)
   }
 }

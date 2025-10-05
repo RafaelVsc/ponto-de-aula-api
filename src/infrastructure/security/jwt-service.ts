@@ -3,7 +3,7 @@ import { AppError } from '@/shared/errors/app-error';
 import jwt, { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 
 
-export type SignPayload = { userId: string; role: UserRole };
+export type SignPayload = { id: string; role: UserRole };
 
 interface TokenPayload {
     sub: string;
@@ -31,8 +31,9 @@ export class JwtService {
         return 'dev-secret';
     }
 
-    sign({ userId, role }: SignPayload): string {
-        const options = { subject: userId, expiresIn: this.expiresIn } as jwt.SignOptions;
+    sign({ id, role }: SignPayload): string {
+        const options = { subject: id, expiresIn: this.expiresIn } as jwt.SignOptions;
+        console.log(options)
         return jwt.sign({ role }, this.secret, options);
     }
 

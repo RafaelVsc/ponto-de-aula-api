@@ -94,6 +94,7 @@ constructor() {
   }
 
   async update(id: string, data: Partial<User>): Promise<User | null> {
+    const now = new Date();
     const index = this.users.findIndex(user => user.id === id);
     if (index === -1) {
       return null;
@@ -105,6 +106,7 @@ constructor() {
       ...data,
       id: current.id,
       registeredAt: current.registeredAt,
+      updatedAt: now
     };
 
     this.users[index] = updated;

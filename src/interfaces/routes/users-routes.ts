@@ -10,10 +10,12 @@ import { updateUserSchema } from '@/interfaces/http/validators/user/update-user-
 import { Router } from 'express';
 import { DeleteUserController } from '../http/controllers/user/delete-user-controller';
 import { ListUserController } from '../http/controllers/user/list-user-controller';
+import { FindUserController } from '../http/controllers/user/find-user-controller';
 
 export default (
   router: Router,
   listUserController: ListUserController,
+  findUserController: FindUserController,
   createUserController: CreateUserController,
   updateUserController: UpdateUserController,
   deleteUserController: DeleteUserController
@@ -26,6 +28,9 @@ export default (
   router.get('/',
     authorize(UserRole.ADMIN, UserRole.SECRETARY),
     (req, res, next) => listUserController.list(req, res, next));
+
+  router.get('/me', 
+    (req, res, next) => findUserController.findMe(req, res, next));
 
   router.patch('/:id', validateParams(uuidParamSchema), validateBody(updateUserSchema), (req, res, next) => updateUserController.update(req, res, next));
   router.delete('/:id',

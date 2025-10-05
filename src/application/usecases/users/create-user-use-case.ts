@@ -1,4 +1,5 @@
 import { CreateUserInputDTO, CreateUserOutputDTO } from '@/application/dto/CreateUserDTO';
+import { userToOutputDTO } from '@/application/mappers/user-mapper';
 import { PasswordHasher } from '@/application/services/password-hasher';
 import { User, UserRole } from '@/domain/entities/User';
 import { UserRepository } from '@/domain/repositories/users/user-repository';
@@ -41,11 +42,7 @@ export class CreateUserUseCase {
 
     const createdUser = await this.userRepository.create(user);
 
-    return {
-      id: createdUser.id!,
-      email: createdUser.email,
-      username: createdUser.username,
-      role: createdUser.role,
-    };
+    // retorna o DTO com o mapper
+    return userToOutputDTO(createdUser);
   }
 }

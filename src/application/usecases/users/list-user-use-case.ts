@@ -1,4 +1,6 @@
-import { User, UserRole } from "@/domain/entities/User";
+import { UserOutputDTO } from "@/application/dto/UserDTO";
+import { usersToOutputDTO } from "@/application/mappers/user-mapper";
+import { UserRole } from "@/domain/entities/User";
 import { UserRepository } from "@/domain/repositories/users/user-repository";
 import { AppError } from "@/shared/errors/app-error";
 
@@ -6,14 +8,16 @@ import { AppError } from "@/shared/errors/app-error";
 export class ListUsersUseCase {
     constructor(private userRepository: UserRepository) { }
 
-    async execute(currentUser: { id: String; role: UserRole }): Promise<User[]> {
+    async execute(currentUser: { id: string; role: UserRole }): Promise<UserOutputDTO[]> {
         if (currentUser.role === UserRole.ADMIN) {
-            return this.userRepository.findAll();
+            const users = await this.userRepository.findAll();
+            return usersToOutputDTO(users);
         }
 
         if (currentUser.role === UserRole.SECRETARY) {
-            return this.userRepository.findAll({ roles: [UserRole.STUDENT, UserRole.TEACHER] })
+            const users = await this.userRepository.findAll({ roles: [UserRole.STUDENT, UserRole.TEACHER] })
+            return usersToOutputDTO(users)
         }
-        throw new AppError('Forbideen', 403)
+        throw new AppError('Forbidden', 403)
     }
 }
