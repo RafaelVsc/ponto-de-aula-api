@@ -1,14 +1,12 @@
+// src/application/dto/UserDTO.ts
 import { UserRole } from '@/domain/entities/User';
 
-export interface UpdateUserInputDTO {
-  name?: string;
-  email?: string;
-}
-
-export interface UpdateUserOutputDTO {
+export interface UserOutputDTO {
   id: string;
   name: string;
   email: string;
   username?: string;
   role: UserRole;
+  registeredAt?: Date;
+  updatedAt?: Date;
 }

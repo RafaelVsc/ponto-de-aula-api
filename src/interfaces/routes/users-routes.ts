@@ -1,17 +1,64 @@
-import { Router } from 'express';
+import { UserRole } from '@/domain/entities/User';
 import { CreateUserController } from '@/interfaces/http/controllers/user/create-user-controller';
 import { UpdateUserController } from '@/interfaces/http/controllers/user/update-user-controller';
+import { authorize } from '@/interfaces/http/middlewares/authorize';
+import { validateParams } from '@/interfaces/http/middlewares/params-validator';
+import { validateBody } from '@/interfaces/http/middlewares/validation-middleware';
+import { uuidParamSchema } from '@/interfaces/http/validators/common/route-params-validator';
 import { createUserSchema } from '@/interfaces/http/validators/user/create-user-validator';
 import { updateUserSchema } from '@/interfaces/http/validators/user/update-user-validator';
-import { validateBody } from '@/interfaces/http/middlewares/validation-middleware';
-import { validateParams } from '@/interfaces/http/middlewares/params-validator';
-import { uuidParamSchema } from '@/interfaces/http/validators/common/route-params-validator';
+import { Router } from 'express';
+import { DeleteUserController } from '../http/controllers/user/delete-user-controller';
+import { ListUserController } from '../http/controllers/user/list-user-controller';
+import { FindUserController } from '../http/controllers/user/find-user-controller';
+import { ChangePasswordController } from '../http/controllers/user/change-password-controller';
+import { changePasswordSchema } from '../http/validators/auth/change-password-validator';
 
 export default (
-  router: Router, 
+  router: Router,
+  listUserController: ListUserController,
+  findUserController: FindUserController,
   createUserController: CreateUserController,
-  updateUserController: UpdateUserController
+  updateUserController: UpdateUserController,
+  deleteUserController: DeleteUserController,
+  changePassword: ChangePasswordController,
 ): void => {
-  router.post('/', validateBody(createUserSchema), (req, res, next) => createUserController.create(req, res, next));
-  router.patch('/:id', validateParams(uuidParamSchema) ,validateBody(updateUserSchema), (req, res, next) => updateUserController.update(req, res, next));
+  router.post(
+    '/',
+    authorize(UserRole.ADMIN, UserRole.SECRETARY),
+    validateBody(createUserSchema),
+    (req, res, next) => createUserController.create(req, res, next),
+  );
+
+  router.get('/', authorize(UserRole.ADMIN, UserRole.SECRETARY), (req, res, next) =>
+    listUserController.list(req, res, next),
+  );
+
+  router.get('/me', (req, res, next) => findUserController.findMe(req, res, next));
+
+  router.put('/me/password', validateBody(changePasswordSchema), (req, res, next) =>
+    changePassword.changePassword(req, res, next),
+  );
+
+  // Rota adicional para self-update (qualquer usuário pode atualizar a si mesmo)
+  router.patch('/me', validateBody(updateUserSchema), (req, res, next) => {
+    // Redireciona para o controller principal usando o ID do usuário autenticado
+    req.params.id = res.locals.auth.id;
+    updateUserController.update(req, res, next);
+  });
+
+  router.patch(
+    '/:id',
+    authorize(UserRole.ADMIN),
+    validateParams(uuidParamSchema),
+    validateBody(updateUserSchema),
+    (req, res, next) => updateUserController.update(req, res, next),
+  );
+
+  router.delete(
+    '/:id',
+    authorize(UserRole.ADMIN),
+    validateParams(uuidParamSchema),
+    (req, res, next) => deleteUserController.delete(req, res, next),
+  );
 };

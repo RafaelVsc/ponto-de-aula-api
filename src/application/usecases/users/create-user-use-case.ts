@@ -1,4 +1,5 @@
 import { CreateUserInputDTO, CreateUserOutputDTO } from '@/application/dto/CreateUserDTO';
+import { userToOutputDTO } from '@/application/mappers/user-mapper';
 import { PasswordHasher } from '@/application/services/password-hasher';
 import { User, UserRole } from '@/domain/entities/User';
 import { UserRepository } from '@/domain/repositories/users/user-repository';
@@ -10,8 +11,17 @@ export class CreateUserUseCase {
     private passwordHasher: PasswordHasher,
   ) {}
 
-  async execute(input: CreateUserInputDTO): Promise<CreateUserOutputDTO> {
+  async execute(
+    input: CreateUserInputDTO,
+    currentUserRole: UserRole,
+  ): Promise<CreateUserOutputDTO> {
     const { name, email, password, role, username } = input;
+
+    if (currentUserRole === UserRole.SECRETARY) {
+      if (![UserRole.STUDENT, UserRole.TEACHER].includes(role)) {
+        throw new AppError('SECRETARY can only create STUDENT or TEACHER', 403);
+      }
+    }
 
     const emailExist = await this.userRepository.findByEmail(email);
     if (emailExist) throw new AppError('Email already registered', 400);
@@ -35,11 +45,7 @@ export class CreateUserUseCase {
 
     const createdUser = await this.userRepository.create(user);
 
-    return {
-      id: createdUser.id!,
-      email: createdUser.email,
-      username: createdUser.username,
-      role: createdUser.role,
-    };
+    // retorna o DTO com o mapper
+    return userToOutputDTO(createdUser);
   }
 }
