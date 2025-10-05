@@ -4,7 +4,7 @@ import { AppError } from "@/shared/errors/app-error"
 import { UserRole } from "@/domain/entities/User";
 
 type AuthContext = {
-  userId: string;
+  id: string;
   role: UserRole;
 }
 
@@ -20,7 +20,7 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
     const token = header.slice(7).trim();
     const payload = jwtService.verify(token);
 
-    const auth: AuthContext = { userId: payload.sub, role: payload.role }
+    const auth: AuthContext = { id: payload.sub, role: payload.role }
     res.locals.auth = auth
     return next()
   } catch (error) {
