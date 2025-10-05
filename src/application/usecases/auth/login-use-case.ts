@@ -27,10 +27,9 @@ export class LoginUseCase {
         const isValid = await this.passwordHasher.compare(password, user.password);
         if (!isValid) throw new AppError('Invalid credentials', 401);
 
-        const token = this.jwtService.sign({ userId: user.id, role: user.role });
-        const { password: _password, ...safeUser } = user;
-
-        return { token, user: safeUser };
+        const token = this.jwtService.sign({ id: user.id, role: user.role });
+        
+        return { token };
 
     }
 }

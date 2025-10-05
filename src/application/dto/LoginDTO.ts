@@ -8,5 +8,5 @@ export interface LoginUserInputDTO {
 
 export interface LoginOutPutDTO {
     token: string;
-    user: Omit<User, 'password'>;
+    // user: Omit<User, 'password'>;
 }

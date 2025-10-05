@@ -10,6 +10,7 @@ export interface CreateUserInputDTO {
 
 export interface CreateUserOutputDTO {
   id: string;
+  name: string;
   email: string;
   username?: string;
   role: UserRole;
