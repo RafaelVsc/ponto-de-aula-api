@@ -13,4 +13,5 @@ export interface User {
   password: string;
   role: UserRole;
   registeredAt?: Date;
+  updatedAt?: Date;
 }
