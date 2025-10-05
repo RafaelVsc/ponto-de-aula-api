@@ -1,4 +1,5 @@
 import { UpdateUserUseCase } from "@/application/usecases/users/update-user-use-case";
+import { UserRole } from "@/domain/entities/User";
 import { Request, Response, NextFunction } from "express";
 
 export class UpdateUserController {
@@ -16,7 +17,14 @@ export class UpdateUserController {
                 });
             }
 
-            const updated = await this.updateUserUseCase.execute(userId, req.body);
+            // Usar tipagem explícita para garantir compatibilidade com o use case
+            const currentUser = res.locals.auth as { id: string; role: UserRole } | undefined;
+            if(!currentUser || !currentUser.id) {
+                return res.status(401).json({status: 'error', message: 'Authentication required'});
+            }
+
+
+            const updated = await this.updateUserUseCase.execute(userId, req.body, currentUser);
             
             return res.status(200).json({
                 status: 'success',

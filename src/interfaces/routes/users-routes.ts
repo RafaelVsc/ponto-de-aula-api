@@ -11,6 +11,8 @@ import { Router } from 'express';
 import { DeleteUserController } from '../http/controllers/user/delete-user-controller';
 import { ListUserController } from '../http/controllers/user/list-user-controller';
 import { FindUserController } from '../http/controllers/user/find-user-controller';
+import { ChangePasswordController } from '../http/controllers/user/change-password-controller';
+import { changePasswordSchema } from '../http/validators/auth/change-password-validator';
 
 export default (
   router: Router,
@@ -18,7 +20,8 @@ export default (
   findUserController: FindUserController,
   createUserController: CreateUserController,
   updateUserController: UpdateUserController,
-  deleteUserController: DeleteUserController
+  deleteUserController: DeleteUserController,
+  changePassword: ChangePasswordController,
 ): void => {
   router.post('/',
     authorize(UserRole.ADMIN, UserRole.SECRETARY),
@@ -29,10 +32,30 @@ export default (
     authorize(UserRole.ADMIN, UserRole.SECRETARY),
     (req, res, next) => listUserController.list(req, res, next));
 
-  router.get('/me', 
+  router.get('/me',
     (req, res, next) => findUserController.findMe(req, res, next));
 
-  router.patch('/:id', validateParams(uuidParamSchema), validateBody(updateUserSchema), (req, res, next) => updateUserController.update(req, res, next));
+  router.put('/me/password',
+    validateBody(changePasswordSchema),
+    (req, res, next) => changePassword.changePassword(req, res, next));
+
+  // Rota adicional para self-update (qualquer usuário pode atualizar a si mesmo)
+  router.patch('/me',
+    validateBody(updateUserSchema),
+    (req, res, next) => {
+      // Redireciona para o controller principal usando o ID do usuário autenticado
+      req.params.id = res.locals.auth.id;
+      updateUserController.update(req, res, next);
+    }
+  );
+
+  router.patch('/:id',
+    authorize(UserRole.ADMIN),
+    validateParams(uuidParamSchema),
+    validateBody(updateUserSchema), (req, res, next) => updateUserController.update(req, res, next));
+
+
+
   router.delete('/:id',
     authorize(UserRole.ADMIN),
     validateParams(uuidParamSchema),
