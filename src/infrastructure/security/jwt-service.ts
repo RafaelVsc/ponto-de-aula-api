@@ -33,7 +33,6 @@ export class JwtService {
 
     sign({ id, role }: SignPayload): string {
         const options = { subject: id, expiresIn: this.expiresIn } as jwt.SignOptions;
-        console.log(options)
         return jwt.sign({ role }, this.secret, options);
     }
 

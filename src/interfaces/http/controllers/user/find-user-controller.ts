@@ -21,7 +21,6 @@ export class FindUserController {
     async findMe(_req: Request, res: Response, next: NextFunction): Promise<Response | void> {
         try {
             const currentUser = res.locals.auth;
-            console.log(currentUser)
             const foundUser = await this.findUserUseCase.execute(currentUser.id, currentUser);
             return res.status(200).json({ data: foundUser });
         } catch (error) {
