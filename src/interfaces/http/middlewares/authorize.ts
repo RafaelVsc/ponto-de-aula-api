@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import { UserRole } from '@/domain/entities/User';
 import { AppError } from '@/shared/errors/app-error';
 
-type AuthContext = { userId: string; role: UserRole };
+type AuthContext = { id: string; role: UserRole };
 
 const getAuth = (res: Response): AuthContext => {
     const auth = res.locals.auth as AuthContext | undefined;

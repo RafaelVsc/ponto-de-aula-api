@@ -20,8 +20,13 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
     const token = header.slice(7).trim();
     const payload = jwtService.verify(token);
 
+    console.log('[auth middleware] token payload:', payload); // <-- log do payload
+
     const auth: AuthContext = { id: payload.sub, role: payload.role }
     res.locals.auth = auth
+
+    console.log('[auth middleware] res.locals.auth:', res.locals.auth); // <-- log do contexto
+
     return next()
   } catch (error) {
     next(error)
