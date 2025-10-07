@@ -48,3 +48,4 @@ temp/
 *.sqlite
 *.sqlite3
 prisma/migrations/dev/
+/src/generated/prisma
