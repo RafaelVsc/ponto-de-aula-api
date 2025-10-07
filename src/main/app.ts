@@ -5,6 +5,8 @@ import { buildUserModule } from './modules/users/users.module';
 import { authenticate } from '@/interfaces/http/middlewares/authenticate';
 import { buildAuthModule } from './modules/auth/auth.module';
 import { InMemoryUserRepository } from '@/infrastructure/database/in-memory-user-repository';
+import { getPrismaClient } from '@/infrastructure/database/prisma/prisma-client';
+import { PrismaUserRepository } from '@/infrastructure/repositories/prisma-user-repository';
 
 export function buildApp() {
   const app = express();
@@ -12,7 +14,10 @@ export function buildApp() {
   // Middlewares
   app.use(express.json());
 
-  const userRepository = new InMemoryUserRepository();
+  const prisma = getPrismaClient();
+
+  // const userRepository = new InMemoryUserRepository();
+  const userRepository = new PrismaUserRepository(prisma);
 
   // Routes
   app.use('/auth/', buildAuthModule(userRepository));
