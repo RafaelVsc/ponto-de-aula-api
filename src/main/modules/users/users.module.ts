@@ -4,7 +4,7 @@ import { DeleteUserUseCase } from '@/application/usecases/users/delete-user-use-
 import { FindUserUseCase } from '@/application/usecases/users/find-user-use-case';
 import { ListUsersUseCase } from '@/application/usecases/users/list-user-use-case';
 import { UpdateUserUseCase } from '@/application/usecases/users/update-user-use-case';
-import { InMemoryUserRepository } from '@/infrastructure/database/in-memory-user-repository';
+import { UserRepository } from '@/domain/repositories/users/user-repository';
 import { BcryptHasher } from '@/infrastructure/security/bcrypt-hasher';
 import { ChangePasswordController } from '@/interfaces/http/controllers/user/change-password-controller';
 import { CreateUserController } from '@/interfaces/http/controllers/user/create-user-controller';
@@ -15,7 +15,7 @@ import { UpdateUserController } from '@/interfaces/http/controllers/user/update-
 import userRoutes from '@/interfaces/routes/users-routes';
 import { Router } from 'express';
 
-export function buildUserModule(userRepository: InMemoryUserRepository): Router {
+export function buildUserModule(userRepository: UserRepository): Router {
   const passwordHasher = new BcryptHasher();
 
   const listUsersUseCase = new ListUsersUseCase(userRepository);
@@ -27,7 +27,7 @@ export function buildUserModule(userRepository: InMemoryUserRepository): Router 
   const createUserUseCase = new CreateUserUseCase(userRepository, passwordHasher);
   const createUserController = new CreateUserController(createUserUseCase);
 
-  const updateUserUseCase = new UpdateUserUseCase(userRepository, passwordHasher);
+  const updateUserUseCase = new UpdateUserUseCase(userRepository);
   const updateUserController = new UpdateUserController(updateUserUseCase);
 
   const deleteUserUseCase = new DeleteUserUseCase(userRepository);

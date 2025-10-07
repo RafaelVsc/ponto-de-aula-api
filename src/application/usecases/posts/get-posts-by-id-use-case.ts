@@ -7,7 +7,7 @@ import { AppError } from '../../../shared/errors/app-error';
 export class GetPostByIdUseCase {
   constructor(
     private postRepository: PostRepository,
-    private userRepository?: UserRepository,
+    private userRepository: UserRepository,
   ) {}
 
   async execute(id: string): Promise<PostOutputDTO> {
@@ -18,8 +18,9 @@ export class GetPostByIdUseCase {
 
     // Enriquecer com o nome do autor se possível (proteção contra userRepository undefined)
     let authorName: string | undefined;
-    if (post.authorId && this.userRepository) {
+    if (post.authorId) {
       const author = await this.userRepository.findById(post.authorId);
+      console.log(author)
       if (author) {
         authorName = author.name;
       }

@@ -12,13 +12,14 @@ import { GetPostByIdUseCase } from '@/application/usecases/posts/get-posts-by-id
 import { SearchPostsUseCase } from '@/application/usecases/posts/search-posts-use-case';
 import { UpdatePostUseCase } from '@/application/usecases/posts/update-post-use-case';
 import { DeletePostUseCase } from '@/application/usecases/posts/delete-post-use-case';
+import { UserRepository } from '@/domain/repositories/users/user-repository';
 
-export function buildPostsModule(): Router {
+export function buildPostsModule(userRepository: UserRepository): Router {
   const postRepository = new InMemoryPostRepository();
 
   const createPostUseCase = new CreatePostUseCase(postRepository);
   const listPostsUseCase = new ListPostsUseCase(postRepository);
-  const getPostByIdUseCase = new GetPostByIdUseCase(postRepository);
+  const getPostByIdUseCase = new GetPostByIdUseCase(postRepository, userRepository);
   const searchPostsUseCase = new SearchPostsUseCase(postRepository);
   const updatePostUseCase = new UpdatePostUseCase(postRepository);
   const deletePostUseCase = new DeletePostUseCase(postRepository);

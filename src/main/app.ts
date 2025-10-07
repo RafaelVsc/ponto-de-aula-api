@@ -27,7 +27,7 @@ export function buildApp() {
   });
 
   app.use(authenticate);
-  app.use('/posts', buildPostsModule());
+  app.use('/posts', buildPostsModule(userRepository));
   app.use('/users', buildUserModule(userRepository));
 
   // 404 + Error handlers
