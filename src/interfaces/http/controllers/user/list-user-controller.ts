@@ -4,7 +4,7 @@ import { NextFunction, Request, Response } from 'express';
 export class ListUserController {
   constructor(private listUserUseCase: ListUsersUseCase) {}
 
-  async list(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+  async list(_req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
       const currentUser = res.locals.auth;
       const users = await this.listUserUseCase.execute(currentUser);
