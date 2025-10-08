@@ -7,6 +7,7 @@ import { buildAuthModule } from './modules/auth/auth.module';
 import { InMemoryUserRepository } from '@/infrastructure/database/in-memory-user-repository';
 import { getPrismaClient } from '@/infrastructure/database/prisma/prisma-client';
 import { PrismaUserRepository } from '@/infrastructure/repositories/prisma-user-repository';
+import { PrismaPostRepository } from '@/infrastructure/repositories/prisma-post-repository';
 
 export function buildApp() {
   const app = express();
@@ -18,6 +19,7 @@ export function buildApp() {
 
   // const userRepository = new InMemoryUserRepository();
   const userRepository = new PrismaUserRepository(prisma);
+  const postRepository = new PrismaPostRepository(prisma);
 
   // Routes
   app.use('/auth/', buildAuthModule(userRepository));
@@ -32,7 +34,7 @@ export function buildApp() {
   });
 
   app.use(authenticate);
-  app.use('/posts', buildPostsModule(userRepository));
+  app.use('/posts', buildPostsModule(userRepository, postRepository));
   app.use('/users', buildUserModule(userRepository));
 
   // 404 + Error handlers

@@ -13,6 +13,7 @@ export function postToOutputDTO(post: Post): PostOutputDTO {
     title: post.title ?? '',
     content: post.content ?? '',
     authorId: post.authorId ?? '',
+    author: post.author ?? '',
     tags: post.tags ?? [],
     // Converter Date para ISO String (ou usar now() como fallback)
     createdAt: post.createdAt
@@ -25,16 +26,6 @@ export function postToOutputDTO(post: Post): PostOutputDTO {
         ? post.updatedAt.toISOString()
         : post.updatedAt
       : new Date().toISOString(),
-  };
-}
-
-/**
- * Versão enriquecida do DTO com nome do autor
- */
-export function postToDetailedDTO(post: Post, authorName?: string): PostOutputDTO {
-  return {
-    ...postToOutputDTO(post),
-    authorName,
   };
 }
 

@@ -3,7 +3,7 @@ export interface PostOutputDTO {
   title: string;
   content: string;
   authorId: string;
-  authorName?: string;
+  author?: string;
   tags: string[];
   createdAt: string;
   updatedAt: string;
