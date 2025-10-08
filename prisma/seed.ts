@@ -4,6 +4,26 @@ import bcrypt from 'bcrypt';
 const prisma = new PrismaClient();
 const SALT_ROUNDS = Number(process.env.SALT_ROUNDS ?? 10);
 
+type SeedPostInput = {
+  title: string;
+  content: string;
+  authorId: string;
+  tags: string[];
+  videoUrl?: string | null;
+  imageUrl?: string | null;
+};
+
+async function ensurePost(data: SeedPostInput) {
+  const existing = await prisma.post.findFirst({
+    where: { title: data.title, authorId: data.authorId },
+  });
+
+  if (!existing) {
+    await prisma.post.create({ data });
+  }
+}
+
+
 async function main() {
   console.log('Running seed...');
 
@@ -62,35 +82,23 @@ async function main() {
     },
   });
 
-  // Criar alguns posts (upsert por título + authorId para evitar duplicação)
-  await prisma.post.upsert({
-    where: {
-      // você pode ter um constraint único para (title, authorId) no DB, se não, usar findFirst+create
-      id: 'seed-post-1', // opcional: usar id fixo facilita idempotência; requer schema permitir id custom
-    },
-    update: {},
-    create: {
-      // Se seu schema gera uuid automático e não permite id fixo, altere para create sem id + uma checagem findFirst
-      id: 'seed-post-1',
-      title: 'Welcome to Ponto de Aula',
-      content: 'Este é um post seed criado para desenvolvimento.',
-      authorId: teacher.id,
-      tags: ['welcome', 'seed'],
-    },
+
+  // Criar alguns posts 
+  await ensurePost({
+    title: 'Bem vindo(a)! ao Ponto de Aula.',
+    content: 'Bem vindos a plataforma Ponto de Aula. seu ponto de encontro de conhecimento',
+    authorId: admin.id,
+    tags: ['welcome', 'admin'],
   });
 
   // Outro post
-  await prisma.post.upsert({
-    where: { id: 'seed-post-2' },
-    update: {},
-    create: {
-      id: 'seed-post-2',
-      title: 'Como usar a API em desenvolvimento',
-      content: 'Exemplos de uso...',
-      authorId: teacher.id,
-      tags: ['tutorial'],
-    },
+  await ensurePost({
+    title: 'Como usar a API em desenvolvimento',
+    content: 'Exemplos de uso...',
+    authorId: teacher.id,
+    tags: ['tutorial'],
   });
+
 
   console.log('Seed finished.');
 }
