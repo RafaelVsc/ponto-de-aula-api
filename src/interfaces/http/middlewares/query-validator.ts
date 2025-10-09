@@ -9,7 +9,7 @@ export const validateQuery = (schema: z.ZodType<any>) => {
       const parsed = schema.parse(req.query);
 
        // Substitui req.query pelo objeto validado e tipado
-      (req as any).query = parsed;
+      (req as any).validatedQuery = parsed;
 
       // Passa o controle para o próximo middleware/controller
       next();
