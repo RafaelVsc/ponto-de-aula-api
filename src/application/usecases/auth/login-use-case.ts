@@ -1,14 +1,14 @@
 import { LoginOutPutDTO, LoginUserInputDTO } from '@/application/dto/LoginDTO';
 import { PasswordHasher } from '@/application/services/password-hasher';
+import { TokenService } from '@/application/services/token-service';
 import { UserRepository } from '@/domain/repositories/users/user-repository';
-import { JwtService } from '@/infrastructure/security/jwt-service';
 import { AppError } from '@/shared/errors/app-error';
 
 export class LoginUseCase {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly passwordHasher: PasswordHasher,
-    private readonly jwtService: JwtService,
+    private readonly tokenService: TokenService,
   ) {}
 
   async execute(input: LoginUserInputDTO): Promise<LoginOutPutDTO> {
@@ -26,7 +26,7 @@ export class LoginUseCase {
     const isValid = await this.passwordHasher.compare(password, user.password);
     if (!isValid) throw new AppError('Invalid credentials', 401);
 
-    const token = this.jwtService.sign({ id: user.id, role: user.role });
+    const token = this.tokenService.sign({ id: user.id, role: user.role });
 
     return { token };
   }
