@@ -1,15 +1,10 @@
+import { TokenPayload, TokenService, TokenSignPayload } from '@/application/services/token-service';
 import { UserRole } from '@/domain/entities/User';
 import { AppError } from '@/shared/errors/app-error';
 import jwt, { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 
-export type SignPayload = { id: string; role: UserRole };
 
-interface TokenPayload {
-  sub: string;
-  role: UserRole;
-}
-
-export class JwtService {
+export class JwtService implements TokenService {
   private readonly secret: string;
 
   constructor(
@@ -20,15 +15,30 @@ export class JwtService {
   }
 
   private static resolveSecret(secret: string | undefined): string {
-    if (secret && secret.trim()) return secret;
-    if (process.env.NODE_ENV === 'production') {
+    // if (secret && secret.trim()) return secret;
+    // if (process.env.NODE_ENV === 'production') {
+    //   throw new AppError('JWT secret is not defined', 500);
+    // }
+    // console.warn('JWT_SECRET not set — using fallback secret for dev/test');
+    // return 'dev-secret';
+    const isProd = process.env.NODE_ENV === 'production';
+
+    if (isProd) {
+      if (secret && secret.trim()) return secret;
       throw new AppError('JWT secret is not defined', 500);
     }
-    console.warn('JWT_SECRET not set — using fallback secret for dev/test');
+
+    // Não usar JWT_SECRET fora de produção para evitar divergências
+    if (secret && secret.trim()) {
+      console.warn('JWT_SECRET defined but ignored in non-production — using fallback for dev/test');
+    } else {
+      console.warn('JWT_SECRET not set — using fallback secret for dev/test');
+    }
     return 'dev-secret';
+
   }
 
-  sign({ id, role }: SignPayload): string {
+  sign({ id, role }: TokenSignPayload): string {
     const options = { subject: id, expiresIn: this.expiresIn } as jwt.SignOptions;
     return jwt.sign({ role }, this.secret, options);
   }

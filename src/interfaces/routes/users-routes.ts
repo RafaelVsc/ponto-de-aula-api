@@ -47,6 +47,14 @@ export default (
     updateUserController.update(req, res, next);
   });
 
+
+  router.get('/:id',
+    authorize(UserRole.ADMIN, UserRole.SECRETARY),
+    validateParams(uuidParamSchema),
+    (req, res, next) => findUserController.findById(req, res, next)
+  );
+
+
   router.patch(
     '/:id',
     authorize(UserRole.ADMIN),

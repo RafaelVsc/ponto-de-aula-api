@@ -13,25 +13,25 @@ export class InMemoryUserRepository implements UserRepository {
         const now = new Date();
         const seeds = [
           {
-            name: 'Seed Admin',
+            name: 'InMemory Admin',
             username: 'admin2025',
             email: 'admin@example.com',
             role: UserRole.ADMIN,
           },
           {
-            name: 'Seed Secretary',
+            name: 'InMemory Secretary',
             username: 'secretary2025',
             email: 'secretary@example.com',
             role: UserRole.SECRETARY,
           },
           {
-            name: 'Seed Teacher',
+            name: 'InMemory Teacher',
             username: 'teacher2025',
             email: 'teacher@example.com',
             role: UserRole.TEACHER,
           },
           {
-            name: 'Seed Student',
+            name: 'InMemory Student',
             username: 'student2025',
             email: 'student@example.com',
             role: UserRole.STUDENT,

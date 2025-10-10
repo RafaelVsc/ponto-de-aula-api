@@ -3,6 +3,7 @@ export interface Post {
   title: string;
   content: string;
   authorId: string;
+  author?: string;
   videoUrl?: string;
   imageUrl?: string;
   createdAt?: Date;
