@@ -38,7 +38,7 @@ coverage/
 !.vscode/launch.json
 !.vscode/extensions.json
 
-# Arquivos do Copilot
+# CI/CD (mantenha workflows versionados)
 .github/
 # Arquivos temporários
 tmp/
@@ -48,4 +48,6 @@ temp/
 *.sqlite
 *.sqlite3
 prisma/migrations/dev/
+pnpm-lock.yaml
+.eslintcache
 /src/generated/prisma
