@@ -3,15 +3,18 @@
   "version": "1.0.0",
   "main": "dist/main/server.js",
   "scripts": {
-    "dev": "tsx watch src/main/server.ts",
-    "build": "tsup src --out-dir dist",
-    "start": "node dist/main/server.js",
+    "dev": "NODE_ENV=development tsx watch src/main/server.ts",
+    "build": "tsup --config tsup.config.ts",
+    "start": "NODE_ENV=production node --env-file=.env dist/main/server.js",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
+  },
+  "prisma":{
+    "seed": "tsx prisma/seed.ts"
   },
   "keywords": [],
   "author": "",
@@ -28,11 +31,13 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
     "prettier": "^3.3.3",
+    "prisma": "^6.16.3",
     "tsup": "^8.5.0",
     "tsx": "^4.20.5",
     "typescript": "^5.9.2"
   },
   "dependencies": {
+    "@prisma/client": "^6.16.3",
     "bcrypt": "^6.0.0",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",

@@ -1,23 +1,21 @@
-import { Request, Response, NextFunction } from 'express';
-import { JwtService } from '@/infrastructure/security/jwt-service';
-import { AppError } from '@/shared/errors/app-error';
+import { TokenService } from '@/application/services/token-service';
 import { UserRole } from '@/domain/entities/User';
+import { AppError } from '@/shared/errors/app-error';
+import { NextFunction, Request, Response } from 'express';
 
 type AuthContext = {
   id: string;
   role: UserRole;
 };
 
-const jwtService = new JwtService();
-
-export const authenticate = (req: Request, res: Response, next: NextFunction) => {
+export const authenticate = (tokenService: TokenService) => (req: Request, res: Response, next: NextFunction) => {
   const header = req.headers.authorization;
   if (!header?.startsWith('Bearer ')) {
     return next(new AppError('Authentication required', 401));
   }
   try {
     const token = header.slice(7).trim();
-    const payload = jwtService.verify(token);
+    const payload = tokenService.verify(token);
 
     const auth: AuthContext = { id: payload.sub, role: payload.role };
     res.locals.auth = auth;

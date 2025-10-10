@@ -5,7 +5,13 @@ import { z, ZodError } from 'zod';
 export const validateQuery = (schema: z.ZodType<any>) => {
   return (req: Request, _res: Response, next: NextFunction) => {
     try {
-      schema.parse(req.query);
+      // Valida os dados da query string usando o esquema do Zod
+      const parsed = schema.parse(req.query);
+
+       // Substitui req.query pelo objeto validado e tipado
+      (req as any).validatedQuery = parsed;
+
+      // Passa o controle para o próximo middleware/controller
       next();
     } catch (error) {
       if (error instanceof ZodError) {

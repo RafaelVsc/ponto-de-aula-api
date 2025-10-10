@@ -1,10 +1,13 @@
-import express from 'express';
-import { buildPostsModule } from '@/main/modules/posts/posts.module';
-import { errorHandler, notFound } from '@/interfaces/http/middlewares/error-handler';
-import { buildUserModule } from './modules/users/users.module';
+import { getPrismaClient } from '@/infrastructure/database/prisma/prisma-client';
+import { PrismaPostRepository } from '@/infrastructure/repositories/prisma-post-repository';
+import { PrismaUserRepository } from '@/infrastructure/repositories/prisma-user-repository';
+import { JwtService } from '@/infrastructure/security/jwt-service';
 import { authenticate } from '@/interfaces/http/middlewares/authenticate';
+import { errorHandler, notFound } from '@/interfaces/http/middlewares/error-handler';
+import { buildPostsModule } from '@/main/modules/posts/posts.module';
+import express from 'express';
 import { buildAuthModule } from './modules/auth/auth.module';
-import { InMemoryUserRepository } from '@/infrastructure/database/in-memory-user-repository';
+import { buildUserModule } from './modules/users/users.module';
 
 export function buildApp() {
   const app = express();
@@ -12,10 +15,15 @@ export function buildApp() {
   // Middlewares
   app.use(express.json());
 
-  const userRepository = new InMemoryUserRepository();
+  const prisma = getPrismaClient();
+
+
+  const userRepository = new PrismaUserRepository(prisma);
+  const postRepository = new PrismaPostRepository(prisma);
+  const jwtService = new JwtService();
 
   // Routes
-  app.use('/auth/', buildAuthModule(userRepository));
+  app.use('/auth/', buildAuthModule(userRepository, jwtService));
 
   // Health check
   app.get('/health', (_req, res) => {
@@ -26,8 +34,8 @@ export function buildApp() {
     res.json({ message: 'API Tech Challenge Fase 2 - FIAP' });
   });
 
-  app.use(authenticate);
-  app.use('/posts', buildPostsModule());
+  app.use(authenticate(jwtService));
+  app.use('/posts', buildPostsModule(postRepository));
   app.use('/users', buildUserModule(userRepository));
 
   // 404 + Error handlers
