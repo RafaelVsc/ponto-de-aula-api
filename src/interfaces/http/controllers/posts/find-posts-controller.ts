@@ -34,7 +34,7 @@ export class ListAllPostsController {
 
   async search(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
-      const { search, tag, authorId, page, limit, sortBy, sortOrder } = req.query as any;
+      const { search, tag, authorId, page, limit, sortBy, sortOrder } = (req as any).validatedQuery;
 
       const posts = await this.searchPostsUseCase.execute({
         search,
@@ -54,7 +54,7 @@ export class ListAllPostsController {
 
   async myPosts(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
-      const { search, tag, page, limit, sortBy, sortOrder } = req.query as any;
+      const { search, tag, page, limit, sortBy, sortOrder } = (req as any).validatedQuery;
       const currentUser = res.locals.auth as { id: string; role: UserRole };
       const posts = await this.searchPostsUseCase.execute({
         search,
