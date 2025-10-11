@@ -8,6 +8,8 @@ import { buildPostsModule } from '@/main/modules/posts/posts.module';
 import express from 'express';
 import { buildAuthModule } from './modules/auth/auth.module';
 import { buildUserModule } from './modules/users/users.module';
+import { makeUserRepository } from './modules/users/user-repository-factory';
+import { makePostRepository } from './modules/posts/post-repository-factory';
 
 export function buildApp() {
   const app = express();
@@ -18,8 +20,11 @@ export function buildApp() {
   const prisma = getPrismaClient();
 
 
-  const userRepository = new PrismaUserRepository(prisma);
-  const postRepository = new PrismaPostRepository(prisma);
+  // const userRepository = new PrismaUserRepository(prisma);
+  // const postRepository = new PrismaPostRepository(prisma);
+
+  const userRepository = makeUserRepository(prisma);
+  const postRepository = makePostRepository(prisma);
   const jwtService = new JwtService();
 
   // Routes
