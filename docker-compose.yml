@@ -1,62 +1,62 @@
-  name: ponto-de-aula
+name: ponto-de-aula
 
-  services:
-    postgres:
-      image: postgres
-      container_name: ponto-de-aula-db
-      env_file: ./.env
-      environment:
-        - TZ=America/Sao_Paulo
-        - POSTGRES_USER=${DATABASE_USER}
-        - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
-        - POSTGRES_DB=${DATABASE_NAME}
-      ports:
-        - '${DATABASE_PORT:-5432}:5432'
-      volumes:
-        - pg_data:/var/lib/postgresql/data
-      healthcheck:
-        test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}']
-        interval: 5s
-        timeout: 3s
-        retries: 10
-      restart: unless-stopped
+services:
+  postgres:
+    image: postgres
+    container_name: ponto-de-aula-db
+    env_file: ./.env
+    environment:
+      - TZ=America/Sao_Paulo
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_DB=${DATABASE_NAME}
+    ports:
+      - '${DATABASE_PORT:-5432}:5432'
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
 
-    migrate:
-      profiles: ["app"]
-      build:
-        context: .
-        dockerfile: Dockerfile
-        target: tools
-      env_file: ./.env
-      environment:
-        # força host interno 'postgres'
-        DATABASE_URL: "postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@postgres:5432/${DATABASE_NAME}?schema=public"
-      depends_on:
-        postgres:
-          condition: service_healthy
-      command: sh -lc "npx prisma migrate deploy && npx prisma db seed"
-      restart: "no"
+  migrate:
+    profiles: ['app']
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: tools
+    env_file: ./.env
+    environment:
+      # força host interno 'postgres'
+      DATABASE_URL: 'postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@postgres:5432/${DATABASE_NAME}?schema=public'
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: sh -lc "npx prisma migrate deploy && npx prisma db seed"
+    restart: 'no'
 
-    api:
-      profiles: ["app"]
-      build:
-        context: .
-        dockerfile: Dockerfile
-      container_name: ponto-de-aula-api
-      env_file: ./.env
-      environment:
-        # garante host interno 'postgres' no container
-        DATABASE_URL: "postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@postgres:5432/${DATABASE_NAME}?schema=public"
-        PORT: "3000"
-        NODE_ENV: "production"
-        # garante segredo em produção (fallback se faltar no env_file/.env do Compose)
-        JWT_SECRET: "${JWT_SECRET:-dev-secret}"
-      ports:
-        - '3000:3000'
-      depends_on:
-        migrate:
-          condition: service_completed_successfully
-      restart: unless-stopped
+  api:
+    profiles: ['app']
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ponto-de-aula-api
+    env_file: ./.env
+    environment:
+      # garante host interno 'postgres' no container
+      DATABASE_URL: 'postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@postgres:5432/${DATABASE_NAME}?schema=public'
+      PORT: '3000'
+      NODE_ENV: 'production'
+      # garante segredo em produção (fallback se faltar no env_file/.env do Compose)
+      JWT_SECRET: '${JWT_SECRET:-dev-secret}'
+    ports:
+      - '3000:3000'
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
 
-  volumes:
-    pg_data:
+volumes:
+  pg_data:

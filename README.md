@@ -165,3 +165,33 @@ Responsabilidades chave:
 - Se o `docker-compose` reportar healthcheck falho, confirme as variáveis `POSTGRES_*` do `.env`.
 - Erros de unicidade do Prisma (ex.: `email`/`username` duplicados) retornam erro de negócio na criação de usuário.
 - Para mudar a porta da API, defina `PORT` no ambiente.
+
+## Execução com Docker (dois modos)
+
+- Desenvolvimento local (hot reload + DB no Docker)
+  - `docker compose up -d` (sobe apenas o Postgres)
+  - Primeira vez (ou após reset do volume): `npx prisma migrate dev` e `npx prisma db seed`
+  - Inicie a API local: `npm run dev`
+
+- Stack completa (Docker: postgres + migrate + api)
+  - Subir tudo com auto-migrate/seed: `docker compose --profile app up -d --build`
+  - Health: `curl http://localhost:3000/health`
+  - Login seed: `POST /auth/login` com `{ "email": "admin@pontodeaula.com", "password": "12345678" }`
+
+### Dicas Docker
+- Atualizar código na API em container: `docker compose up -d --build --no-deps api`
+- Alterou apenas variáveis de ambiente: `docker compose up -d --force-recreate api`
+- Derrubar (sem perder dados):
+  - Sem profile: `docker compose down --remove-orphans`
+  - Com profile: `docker compose --profile app down --remove-orphans`
+- Reset total (apaga dados): `docker compose down --volumes --remove-orphans`
+
+## GitHub Codespaces (Dev Container)
+
+O projeto inclui `.devcontainer/devcontainer.json`, que provisiona automaticamente Node 22 e Postgres 16 no Codespaces.
+
+- Primeira abertura: o Codespaces cria o ambiente, instala dependências (`npm ci`), gera o Prisma Client e prepara `.env` a partir de `.env.example`.
+- A cada start: aguarda o Postgres, cria o DB se necessário e executa `prisma migrate dev` + `prisma db seed`.
+- Para rodar a API: `npm run dev` (porta 3000 encaminhada automaticamente). Health: `GET /health`.
+
+Se preferir rodar com Docker dentro do Codespaces, habilite Docker-in-Docker e use os mesmos comandos do Docker acima (opcional; mais pesado).
