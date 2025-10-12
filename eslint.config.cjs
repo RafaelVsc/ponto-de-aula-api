@@ -8,7 +8,14 @@ const globals = require('globals');
 /** @type {import('eslint').Linter.FlatConfig[]} */
 module.exports = [
   {
-    ignores: ['dist/**', 'node_modules/**'],
+    ignores: [
+      'dist/**',
+      'node_modules/**',
+      'coverage/**',
+      '.jest-cache/**',
+      'src/generated/**',
+      'codex/**',
+    ],
   },
   {
     files: ['**/*.ts'],

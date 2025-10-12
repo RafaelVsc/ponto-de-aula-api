@@ -13,9 +13,7 @@ import { UpdatePostController } from '@/interfaces/http/controllers/posts/update
 import postsRoutes from '@/interfaces/routes/posts-routes';
 import { Router } from 'express';
 
-export function buildPostsModule(
-  postRepository: PostRepository
-): Router {
+export function buildPostsModule(postRepository: PostRepository): Router {
   // const postRepository = new InMemoryPostRepository();
 
   const createPostUseCase = new CreatePostUseCase(postRepository);

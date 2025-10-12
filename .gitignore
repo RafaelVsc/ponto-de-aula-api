@@ -1,6 +1,5 @@
 # Dependências
 node_modules/
-package-lock.json
 yarn.lock
 
 # Arquivos de compilação
@@ -29,6 +28,7 @@ Thumbs.db
 
 # Cobertura de testes
 coverage/
+.jest-cache/
 
 # Arquivos de editor
 .idea/
@@ -37,12 +37,14 @@ coverage/
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+.devcontainer/
 
-# CI/CD (mantenha workflows versionados)
-.github/
+# CI/CD (workflows versionados)
+# (não ignore .github para versionar workflows)
 # Arquivos temporários
 tmp/
 temp/
+codex/
 
 # Banco de dados
 *.sqlite

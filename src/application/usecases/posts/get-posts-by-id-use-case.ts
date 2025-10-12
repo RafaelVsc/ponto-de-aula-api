@@ -4,8 +4,7 @@ import { PostRepository } from '../../../domain/repositories/posts/post-reposito
 import { AppError } from '../../../shared/errors/app-error';
 
 export class GetPostByIdUseCase {
-  constructor(
-    private postRepository: PostRepository) { }
+  constructor(private postRepository: PostRepository) {}
 
   async execute(id: string): Promise<PostOutputDTO> {
     const post = await this.postRepository.findById(id);
