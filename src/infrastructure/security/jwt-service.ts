@@ -3,7 +3,6 @@ import { UserRole } from '@/domain/entities/User';
 import { AppError } from '@/shared/errors/app-error';
 import jwt, { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 
-
 export class JwtService implements TokenService {
   private readonly secret: string;
 
@@ -30,12 +29,13 @@ export class JwtService implements TokenService {
 
     // Não usar JWT_SECRET fora de produção para evitar divergências
     if (secret && secret.trim()) {
-      console.warn('JWT_SECRET defined but ignored in non-production — using fallback for dev/test');
+      console.warn(
+        'JWT_SECRET defined but ignored in non-production — using fallback for dev/test',
+      );
     } else {
       console.warn('JWT_SECRET not set — using fallback secret for dev/test');
     }
     return 'dev-secret';
-
   }
 
   sign({ id, role }: TokenSignPayload): string {

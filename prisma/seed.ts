@@ -23,9 +23,8 @@ async function ensurePost(data: SeedPostInput) {
   }
 }
 
-
 async function main() {
-  console.log('Running seed...');
+  console.warn('Running seed...');
 
   // Usuários seeds (idempotente via upsert por email)
   const passwordPlain = '12345678';
@@ -65,7 +64,7 @@ async function main() {
     },
   });
 
-  const student = await prisma.user.upsert({
+  const _student = await prisma.user.upsert({
     where: { email: 'student@pontodeaula.com' },
     update: {
       name: 'Seed Student',
@@ -82,8 +81,7 @@ async function main() {
     },
   });
 
-
-  // Criar alguns posts 
+  // Criar alguns posts
   await ensurePost({
     title: 'Bem vindo(a)! ao Ponto de Aula.',
     content: 'Bem vindos a plataforma Ponto de Aula. seu ponto de encontro de conhecimento',
@@ -99,8 +97,7 @@ async function main() {
     tags: ['tutorial'],
   });
 
-
-  console.log('Seed finished.');
+  console.warn('Seed finished.');
 }
 
 main()
