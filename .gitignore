@@ -1,6 +1,5 @@
 # Dependências
 node_modules/
-package-lock.json
 yarn.lock
 
 # Arquivos de compilação
@@ -39,11 +38,12 @@ coverage/
 !.vscode/launch.json
 !.vscode/extensions.json
 
-# CI/CD (mantenha workflows versionados)
-.github/
+# CI/CD (workflows versionados)
+# (não ignore .github para versionar workflows)
 # Arquivos temporários
 tmp/
 temp/
+codex/
 
 # Banco de dados
 *.sqlite
