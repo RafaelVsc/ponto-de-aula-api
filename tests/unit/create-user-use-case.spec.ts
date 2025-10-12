@@ -1,8 +1,7 @@
 import { CreateUserUseCase } from '@/application/usecases/users/create-user-use-case';
-import { BcryptHasher } from '@/infrastructure/security/bcrypt-hasher';
-import { UserRepository } from '@/domain/repositories/users/user-repository';
 import { User, UserRole } from '@/domain/entities/User';
-import { ChangePasswordUseCase } from '@/application/usecases/users/change-password-use-case';
+import { UserRepository } from '@/domain/repositories/users/user-repository';
+import { BcryptHasher } from '@/infrastructure/security/bcrypt-hasher';
 
 
 describe('CreateUserUseCase (unit)', () => {
@@ -48,44 +47,21 @@ describe('CreateUserUseCase (unit)', () => {
         expect(capturedUser?.password).not.toBe('12345678');
     });
 
-    it('rejects when new password equals current', async () => {
+    it('rejects with 400 when role is invalid', async () => {
         const repo = makeRepo();
-        const usecase = new ChangePasswordUseCase(repo, hasher);
+        repo.findByEmail.mockResolvedValue(null);
 
-        await expect(usecase.execute('u1', {
-            currentPassword: '12345678',
-            newPassword: '12345678',
-        })).rejects.toMatchObject({ message: 'New password must be different from current password' });
-    });
-
-    it('updates password with a new hash', async () => {
-        const repo = makeRepo();
-        const oldHash = await hasher.hash('oldpass123');
-        const user: User = {
-            id: 'u2',
-            name: 'User 2',
-            email: 'u2@example.com',
+        const sut = new CreateUserUseCase(repo, hasher);
+        await expect(sut.execute({
+            name: 'X',
+            email: 'x@example.com',
             username: 'user2025',
-            password: oldHash,
-            role: UserRole.TEACHER,
-        };
-        repo.findById.mockResolvedValue(user);
-
-        let updatedData: Partial<User> | undefined;
-        repo.update.mockImplementation(async (_id, data) => {
-            updatedData = data;
-            return { ...user, ...data } as User;
+            password: '12345678',
+            role: 'INVALID' as any,
+        }, UserRole.ADMIN)).rejects.toMatchObject({
+            message: 'Invalid role',
+            statusCode: 400,
         });
-
-        const usecase = new ChangePasswordUseCase(repo, hasher);
-        const result = await usecase.execute('u2', {
-            currentPassword: 'oldpass123',
-            newPassword: 'newpass123',
-        });
-
-        expect(result.success).toBe(true);
-        expect(updatedData?.password).toBeDefined();
-        expect(updatedData?.password).not.toBe('newpass123');
     });
 
 });
