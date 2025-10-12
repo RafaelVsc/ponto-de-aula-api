@@ -20,7 +20,11 @@ describe('authenticate middleware', () => {
   });
 
   it('calls next with error when token invalid', () => {
-    const tokenService = { verify: jest.fn(() => { throw new AppError('Invalid or expired token', 401); }) } as any;
+    const tokenService = {
+      verify: jest.fn(() => {
+        throw new AppError('Invalid or expired token', 401);
+      }),
+    } as any;
     const mw = authenticate(tokenService);
     const req = { headers: { authorization: 'Bearer invalid' } } as any;
     const res = makeRes();
@@ -44,4 +48,3 @@ describe('authenticate middleware', () => {
     expect(next).toHaveBeenCalledWith();
   });
 });
-

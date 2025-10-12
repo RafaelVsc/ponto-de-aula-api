@@ -59,7 +59,6 @@ describe('LoginUseCase (jest mocks)', () => {
     expect(payload.role).toBe(UserRole.TEACHER);
     expect(repo.findByEmail).toHaveBeenCalledWith('user@example.com');
     expect(repo.findByUsername).not.toHaveBeenCalled();
-
   });
 
   it('logs in with username and returns a valid token', async () => {
@@ -89,7 +88,6 @@ describe('LoginUseCase (jest mocks)', () => {
     expect(payload.role).toBe(UserRole.ADMIN);
     expect(repo.findByUsername).toHaveBeenCalledWith('user2025');
     expect(repo.findByEmail).not.toHaveBeenCalled();
-
   });
 
   it('fails with invalid password', async () => {
@@ -110,9 +108,8 @@ describe('LoginUseCase (jest mocks)', () => {
     // Act+Assert: rejeita com AppError (credenciais inválidas)
     const usecase = new LoginUseCase(repo, hasher, tokenService);
     await expect(
-      usecase.execute({ email: 'other@example.com', password: 'wrong' })
+      usecase.execute({ email: 'other@example.com', password: 'wrong' }),
     ).rejects.toBeInstanceOf(AppError);
-
   });
 
   it('requires email or username', async () => {
@@ -122,11 +119,11 @@ describe('LoginUseCase (jest mocks)', () => {
 
     await expect(
       usecase.execute({
-        email: undefined, username: undefined, password:
-          '12345678'
-      })
+        email: undefined,
+        username: undefined,
+        password: '12345678',
+      }),
     ).rejects.toMatchObject({ message: 'Email or Username is required' });
-
   });
 
   it('prioritizes email when both email and username are provided', async () => {
@@ -169,7 +166,6 @@ describe('LoginUseCase (jest mocks)', () => {
     expect(payload.role).toBe(UserRole.SECRETARY);
     expect(repo.findByEmail).toHaveBeenCalledTimes(1);
     expect(repo.findByUsername).not.toHaveBeenCalled();
-
   });
 
   it('fails when user not found by username', async () => {
@@ -180,8 +176,7 @@ describe('LoginUseCase (jest mocks)', () => {
     // Assert: rejeita com AppError de credenciais inválidas
     const usecase = new LoginUseCase(repo, hasher, tokenService);
     await expect(
-      usecase.execute({ username: 'missing', password: '12345678' })
+      usecase.execute({ username: 'missing', password: '12345678' }),
     ).rejects.toMatchObject({ message: 'Invalid credentials' });
-
   });
 });

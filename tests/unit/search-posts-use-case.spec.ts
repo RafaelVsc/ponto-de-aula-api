@@ -14,20 +14,37 @@ describe('SearchPostsUseCase', () => {
   it('rejects invalid authorId type (400)', async () => {
     const repo = makeRepo();
     const sut = new SearchPostsUseCase(repo);
-    await expect(
-      sut.execute({ search: 'x', authorId: 123 as any })
-    ).rejects.toMatchObject({ message: 'Invalid authorId', statusCode: 400 });
+    await expect(sut.execute({ search: 'x', authorId: 123 as any })).rejects.toMatchObject({
+      message: 'Invalid authorId',
+      statusCode: 400,
+    });
   });
 
   it('forwards filters and maps DTOs', async () => {
     const repo = makeRepo();
     const now = new Date();
     repo.findAll.mockResolvedValue([
-      { id: 'p1', title: 'T', content: 'C', authorId: 'a1', createdAt: now, updatedAt: now, tags: ['t'] } as Post,
+      {
+        id: 'p1',
+        title: 'T',
+        content: 'C',
+        authorId: 'a1',
+        createdAt: now,
+        updatedAt: now,
+        tags: ['t'],
+      } as Post,
     ]);
 
     const sut = new SearchPostsUseCase(repo);
-    const params = { search: 'abc', tag: 't', authorId: 'a1', page: 2, limit: 10, sortBy: 'title' as const, sortOrder: 'asc' as const };
+    const params = {
+      search: 'abc',
+      tag: 't',
+      authorId: 'a1',
+      page: 2,
+      limit: 10,
+      sortBy: 'title' as const,
+      sortOrder: 'asc' as const,
+    };
     const out = await sut.execute(params);
 
     expect(repo.findAll).toHaveBeenCalledWith(params);

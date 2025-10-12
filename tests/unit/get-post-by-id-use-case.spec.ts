@@ -36,7 +36,9 @@ describe('GetPostByIdUseCase', () => {
     repo.findById.mockResolvedValue(null);
 
     const sut = new GetPostByIdUseCase(repo);
-    await expect(sut.execute('missing')).rejects.toMatchObject({ message: 'Post not found', statusCode: 404 });
+    await expect(sut.execute('missing')).rejects.toMatchObject({
+      message: 'Post not found',
+      statusCode: 404,
+    });
   });
 });
-

@@ -28,8 +28,10 @@ describe('DeletePostUseCase', () => {
     repo.findById.mockResolvedValue(null);
 
     const sut = new DeletePostUseCase(repo);
-    await expect(sut.execute('missing', 'u1', UserRole.TEACHER))
-      .rejects.toMatchObject({ message: 'Post not found', statusCode: 404 });
+    await expect(sut.execute('missing', 'u1', UserRole.TEACHER)).rejects.toMatchObject({
+      message: 'Post not found',
+      statusCode: 404,
+    });
     expect(repo.delete).not.toHaveBeenCalled();
   });
 
@@ -38,11 +40,10 @@ describe('DeletePostUseCase', () => {
     repo.findById.mockResolvedValue(makePost());
 
     const sut = new DeletePostUseCase(repo);
-    await expect(sut.execute('p1', 'other-user', UserRole.TEACHER))
-      .rejects.toMatchObject({
-        message: 'Forbidden: only the author or admin can delete this post',
-        statusCode: 403,
-      });
+    await expect(sut.execute('p1', 'other-user', UserRole.TEACHER)).rejects.toMatchObject({
+      message: 'Forbidden: only the author or admin can delete this post',
+      statusCode: 403,
+    });
     expect(repo.delete).not.toHaveBeenCalled();
   });
 
@@ -64,4 +65,3 @@ describe('DeletePostUseCase', () => {
     expect(repo.delete).toHaveBeenCalledWith('p1');
   });
 });
-
