@@ -1,7 +1,6 @@
 # Use postgres/example user/password credentials
 
 services:
-
   postgres:
     image: postgres
     container_name: pg_dev
@@ -14,11 +13,11 @@ services:
       - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
       - POSTGRES_DB=${DATABASE_NAME}
     ports:
-      - "${DATABASE_PORT:-5432}:5432"   # remova esta linha se NÃO quiser expor para fora
+      - '${DATABASE_PORT:-5432}:5432' # remova esta linha se NÃO quiser expor para fora
     volumes:
       - pg_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}']
       interval: 5s
       timeout: 3s
       retries: 10
