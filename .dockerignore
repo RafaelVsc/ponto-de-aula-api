@@ -1,0 +1,34 @@
+  # VCS e metadados
+
+  .git
+  .github
+  .idea
+  .vscode
+
+  # Node
+
+  node_modules
+  npm-debug.log*
+  yarn-error.log*
+  pnpm-lock.yaml
+
+  # Build/coverage/cache
+
+  dist
+  coverage
+  .jest-cache
+  .cache
+  tmp
+
+  # Docker/compose e env locais
+
+  Dockerfile
+  docker-compose.yml
+  .env
+  .env.local
+
+  # Outros
+
+  *.log
+  .DS_Store
+
