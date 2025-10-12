@@ -17,7 +17,7 @@ export class CreatePostController {
 
       return res.status(201).json({
         status: 'success',
-        message: 'Post criado com sucesso',
+        message: 'Post created successfully',
         data: result,
       });
     } catch (error) {

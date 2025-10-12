@@ -8,7 +8,7 @@ import { Router } from 'express';
 
 export function buildAuthModule(
   userRepository: UserRepository,
-  tokenService: TokenService
+  tokenService: TokenService,
 ): Router {
   // Criar instâncias das dependências
   const passwordHasher = new BcryptHasher();

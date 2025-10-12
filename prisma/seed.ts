@@ -23,16 +23,15 @@ async function ensurePost(data: SeedPostInput) {
   }
 }
 
-
 async function main() {
-  console.log('Running seed...');
+  console.warn('Running seed...');
 
   // Usuários seeds (idempotente via upsert por email)
   const passwordPlain = '12345678';
   const hashedPassword = await bcrypt.hash(passwordPlain, SALT_ROUNDS);
 
   const admin = await prisma.user.upsert({
-    where: { email: 'admin@example.com' },
+    where: { email: 'admin@pontodeaula.com' },
     update: {
       name: 'Seed Admin',
       username: 'admin2025',
@@ -42,14 +41,14 @@ async function main() {
     create: {
       name: 'Seed Admin',
       username: 'admin2025',
-      email: 'admin@example.com',
+      email: 'admin@pontodeaula.com',
       password: hashedPassword,
       role: 'ADMIN',
     },
   });
 
   const teacher = await prisma.user.upsert({
-    where: { email: 'teacher@example.com' },
+    where: { email: 'teacher@pontodeaula.com' },
     update: {
       name: 'Seed Teacher',
       username: 'teacher2025',
@@ -59,14 +58,14 @@ async function main() {
     create: {
       name: 'Seed Teacher',
       username: 'teacher2025',
-      email: 'teacher@example.com',
+      email: 'teacher@pontodeaula.com',
       password: hashedPassword,
       role: 'TEACHER',
     },
   });
 
-  const student = await prisma.user.upsert({
-    where: { email: 'student@example.com' },
+  const _student = await prisma.user.upsert({
+    where: { email: 'student@pontodeaula.com' },
     update: {
       name: 'Seed Student',
       username: 'student2025',
@@ -76,14 +75,13 @@ async function main() {
     create: {
       name: 'Seed Student',
       username: 'student2025',
-      email: 'student@example.com',
+      email: 'student@pontodeaula.com',
       password: hashedPassword,
       role: 'STUDENT',
     },
   });
 
-
-  // Criar alguns posts 
+  // Criar alguns posts
   await ensurePost({
     title: 'Bem vindo(a)! ao Ponto de Aula.',
     content: 'Bem vindos a plataforma Ponto de Aula. seu ponto de encontro de conhecimento',
@@ -99,8 +97,7 @@ async function main() {
     tags: ['tutorial'],
   });
 
-
-  console.log('Seed finished.');
+  console.warn('Seed finished.');
 }
 
 main()

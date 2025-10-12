@@ -8,7 +8,7 @@ export const validateQuery = (schema: z.ZodType<any>) => {
       // Valida os dados da query string usando o esquema do Zod
       const parsed = schema.parse(req.query);
 
-       // Substitui req.query pelo objeto validado e tipado
+      // Substitui req.query pelo objeto validado e tipado
       (req as any).validatedQuery = parsed;
 
       // Passa o controle para o próximo middleware/controller

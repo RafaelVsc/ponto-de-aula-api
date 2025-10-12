@@ -39,9 +39,8 @@ export default (
     (req, res, next) => listPostController.myPosts(req, res, next),
   );
 
-  router.get('/search',
-    validateQuery(searchQuerySchema),
-    (req, res, next) => listPostController.search(req, res, next)
+  router.get('/search', validateQuery(searchQuerySchema), (req, res, next) =>
+    listPostController.search(req, res, next),
   );
 
   router.get('/:id', validateParams(uuidParamSchema), (req, res, next) =>

@@ -1,12 +1,12 @@
 import { getPrismaClient } from '@/infrastructure/database/prisma/prisma-client';
-import { PrismaPostRepository } from '@/infrastructure/repositories/prisma-post-repository';
-import { PrismaUserRepository } from '@/infrastructure/repositories/prisma-user-repository';
 import { JwtService } from '@/infrastructure/security/jwt-service';
 import { authenticate } from '@/interfaces/http/middlewares/authenticate';
 import { errorHandler, notFound } from '@/interfaces/http/middlewares/error-handler';
 import { buildPostsModule } from '@/main/modules/posts/posts.module';
 import express from 'express';
 import { buildAuthModule } from './modules/auth/auth.module';
+import { makePostRepository } from './modules/posts/post-repository-factory';
+import { makeUserRepository } from './modules/users/user-repository-factory';
 import { buildUserModule } from './modules/users/users.module';
 
 export function buildApp() {
@@ -17,9 +17,8 @@ export function buildApp() {
 
   const prisma = getPrismaClient();
 
-
-  const userRepository = new PrismaUserRepository(prisma);
-  const postRepository = new PrismaPostRepository(prisma);
+  const userRepository = makeUserRepository(prisma);
+  const postRepository = makePostRepository(prisma);
   const jwtService = new JwtService();
 
   // Routes

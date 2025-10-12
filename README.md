@@ -18,31 +18,42 @@ API em Node.js + TypeScript (Express 5) organizada em Clean Architecture, com pe
 
 ## Início Rápido (desenvolvimento)
 
-1) Instalar dependências
+1. Instalar dependências
+
 - `npm install`
 
-2) Criar arquivo de ambiente a partir do exemplo
+2. Criar arquivo de ambiente a partir do exemplo
+
 - `cp .env.example .env`
 
-3) Subir banco Postgres com Docker
+3. Subir banco Postgres com Docker
+
 - `docker-compose up -d`
 
-4) Configurar o banco (migrations, generate, seed)
+4. Configurar o banco (migrations, generate, seed)
+
 - `npx prisma migrate dev` (cria/aplica migrations no ambiente local)
 - `npx prisma db seed` (cria usuários e posts iniciais)
 
-5) Rodar a API
+5. Rodar a API
+
 - `npm run dev` (porta padrão: `3000` via `PORT` opcional)
 
-6) Health check
+6. Health check
+
 - `curl http://localhost:3000/health`
 
 Credenciais de seed (senha: `12345678`):
-- Admin: `admin@example.com`
-- Teacher: `teacher@example.com`
-- Student: `student@example.com`
+
+- Admin: `admin@pontodeaula.com`
+- Teacher: `teacher@pontodeaula.com`
+- Student: `student@pontodeaula.com`
+- Secretary: `secretary@pontodeaula.com`
+
+Nota sobre testes: em `NODE_ENV=test`, os repositórios "in-memory" são usados por padrão e incluem seeds com emails `@example.com` (ex.: `admin@example.com`). Em desenvolvimento/produção (Prisma), as credenciais de seed são as `@pontodeaula.com` acima.
 
 Observações:
+
 - Em desenvolvimento, o JWT usa um segredo de fallback interno. Em produção é obrigatório definir `JWT_SECRET`.
 - O arquivo `.env` já possui variáveis padrão para Postgres local. Ajuste conforme necessário.
 
@@ -67,14 +78,17 @@ Observações:
 Base: `http://localhost:3000`
 
 Geral
+
 - `GET /health` – health check
 - `GET /` – mensagem de boas-vindas
 
 Autenticação
+
 - `POST /auth/login` – body: `{ email? | username?, password }`. Retorna `{ token }`.
   - Use `Authorization: Bearer <token>` nas rotas autenticadas.
 
 Users (todas sob autenticação; autorizações por rota)
+
 - `POST /users` – cria usuário (ADMIN, SECRETARY)
   - body: `{ name, email, username, password, role }`
   - Observação: nesta branch (Prisma), `username` é obrigatório no banco e deve ser informado na criação.
@@ -88,6 +102,7 @@ Users (todas sob autenticação; autorizações por rota)
 - `DELETE /users/:id` – remove por id (ADMIN)
 
 Posts (todas sob autenticação; autorizações por rota)
+
 - `POST /posts` – cria post (ADMIN, SECRETARY, TEACHER)
   - body: `{ title, content, videoUrl?, imageUrl?, tags?[] }`
 - `GET /posts` – lista/busca com paginação e ordenação
@@ -103,7 +118,7 @@ Posts (todas sob autenticação; autorizações por rota)
 ## Exemplo de uso (cURL)
 
 - Login (admin):
-  - `curl -X POST http://localhost:3000/auth/login -H "Content-Type: application/json" -d '{"email":"admin@example.com","password":"12345678"}'`
+  - `curl -X POST http://localhost:3000/auth/login -H "Content-Type: application/json" -d '{"email":"admin@pontodeaula.com","password":"12345678"}'`
 
 - Listar posts (com token):
   - `curl http://localhost:3000/posts -H "Authorization: Bearer <TOKEN>"`
@@ -116,6 +131,7 @@ Posts (todas sob autenticação; autorizações por rota)
 - Inspecionar dados: `npx prisma studio`
 
 Produção/staging:
+
 - Use `npx prisma migrate deploy` para aplicar migrations existentes.
 - Garanta `JWT_SECRET` definido e banco acessível via `DATABASE_URL`.
 
@@ -129,6 +145,7 @@ Produção/staging:
 - `src/shared` – Erros e utilitários comuns.
 
 Responsabilidades chave:
+
 - Controllers validam entrada e orquestram casos de uso; sem regra de negócio.
 - Use cases contêm a regra e retornam DTOs ou lançam `AppError` com status.
 - Repositórios Prisma realizam persistência; esta branch utiliza Prisma por padrão.
@@ -148,3 +165,23 @@ Responsabilidades chave:
 - Se o `docker-compose` reportar healthcheck falho, confirme as variáveis `POSTGRES_*` do `.env`.
 - Erros de unicidade do Prisma (ex.: `email`/`username` duplicados) retornam erro de negócio na criação de usuário.
 - Para mudar a porta da API, defina `PORT` no ambiente.
+
+## Execução com Docker (dois modos)
+
+- Desenvolvimento local (hot reload + DB no Docker)
+  - `docker compose up -d` (sobe apenas o Postgres)
+  - Primeira vez (ou após reset do volume): `npx prisma migrate dev` e `npx prisma db seed`
+  - Inicie a API local: `npm run dev`
+
+- Stack completa (Docker: postgres + migrate + api)
+  - Subir tudo com auto-migrate/seed: `docker compose --profile app up -d --build`
+  - Health: `curl http://localhost:3000/health`
+  - Login seed: `POST /auth/login` com `{ "email": "admin@pontodeaula.com", "password": "12345678" }`
+
+### Dicas Docker
+- Atualizar código na API em container: `docker compose up -d --build --no-deps api`
+- Alterou apenas variáveis de ambiente: `docker compose up -d --force-recreate api`
+- Derrubar (sem perder dados):
+  - Sem profile: `docker compose down --remove-orphans`
+  - Com profile: `docker compose --profile app down --remove-orphans`
+- Reset total (apaga dados): `docker compose down --volumes --remove-orphans`
