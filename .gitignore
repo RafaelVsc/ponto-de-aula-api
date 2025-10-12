@@ -37,6 +37,7 @@ coverage/
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+.devcontainer/
 
 # CI/CD (workflows versionados)
 # (não ignore .github para versionar workflows)
