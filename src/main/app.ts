@@ -17,8 +17,6 @@ export function buildApp() {
 
   const prisma = getPrismaClient();
 
-
-
   const userRepository = makeUserRepository(prisma);
   const postRepository = makePostRepository(prisma);
   const jwtService = new JwtService();
