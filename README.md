@@ -8,7 +8,7 @@ A **API Ponto de Aula** é um projeto RESTful robusto, desenvolvido como parte d
 *   **CRUD de Posts:** Criação, leitura, atualização e exclusão de publicações.
 *   **Busca Avançada:** Filtros dinâmicos, paginação e ordenação para consulta de posts.
 
-Construída com **Node.js** e **TypeScript**, a API segue os princípios da **Clean Architecture** e do design **Hexagonal (Portas e Adaptadores)**. O código foi estruturado aplicando os conceitos **SOLID** para garantir um sistema desacoplado, testável, coeso e de fácil manutenção, utilizando **Prisma** como ORM para interação com o banco de dados PostgreSQL.
+Construída com **Node.js** e **TypeScript**, a API segue os princípios da **Clean Architecture** e **Hexagonal Architecture**. O código foi estruturado aplicando os conceitos **SOLID** para garantir um sistema desacoplado, testável, coeso e de fácil manutenção, utilizando **Prisma** como ORM para interação com o banco de dados PostgreSQL.
 
 
 ## Vídeo de Apresentação
@@ -174,7 +174,7 @@ Responsabilidades chave:
 
 Para uma representação visual da arquitetura e do domínio, veja os **[Diagramas do Sistema](./diagrams/)**.
 
-- Estilo: Clean Architecture com Ports & Adapters (Hexagonal).
+- Estilo: Clean Architecture & Hexagonal.
 - Camadas: `src/domain` (entidades e portas), `src/application` (use cases e serviços de aplicação), `src/infrastructure` (adapters de banco/segurança), `src/interfaces` (HTTP), `src/main` (composition root).
 - Portas (contracts): `UserRepository`, `PostRepository`, `PasswordHasher`, `TokenService` — os casos de uso dependem apenas dessas interfaces.
 - Adaptadores: `PrismaUserRepository`, `PrismaPostRepository`, `JwtService`, `BcryptHasher` — implementam as portas na infraestrutura.
