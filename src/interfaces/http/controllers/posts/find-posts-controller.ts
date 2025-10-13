@@ -34,12 +34,16 @@ export class ListAllPostsController {
 
   async search(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
-      const { search, tag, authorId, page, limit, sortBy, sortOrder } = (req as any).validatedQuery;
+      const { search, tag, authorId, authorName, title, page, limit, sortBy, sortOrder } = (
+        req as any
+      ).validatedQuery;
 
       const posts = await this.searchPostsUseCase.execute({
         search,
         tag,
         authorId,
+        authorName,
+        title,
         page,
         limit,
         sortBy,

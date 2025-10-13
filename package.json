@@ -27,6 +27,8 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.3.1",
     "@types/supertest": "^6.0.3",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.8",
     "@typescript-eslint/eslint-plugin": "^8.8.1",
     "@typescript-eslint/parser": "^8.8.1",
     "eslint": "^9.12.0",
@@ -46,6 +48,9 @@
     "bcrypt": "^6.0.0",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui": "^5.29.4",
+    "swagger-ui-express": "^5.0.1",
     "zod": "^4.1.11"
   }
 }
