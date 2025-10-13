@@ -73,6 +73,13 @@ Observações:
 - `npm run lint` / `npm run lint:fix` – lint
 - `npm run format` / `npm run format:check` – formatação com Prettier
 
+## Testes e Qualidade
+
+- **Testes**: O projeto inclui testes unitários e de integração na pasta `/tests`. Para executá-los, use o comando:
+  - `npm test`
+- **Cobertura de Testes**: A suíte de testes garante uma cobertura de código superior a 20%, conforme requerido, focando em partes críticas da aplicação. O relatório de cobertura pode ser gerado e visualizado no diretório `/coverage`.
+- **CI/CD**: O projeto utiliza GitHub Actions para automação de CI/CD. O workflow definido em `.github/workflows/ci.yml` é responsável por executar os testes e o linter automaticamente a cada push ou pull request, garantindo a integração contínua e a qualidade do código.
+
 ## Endpoints
 
 Base: `http://localhost:3000`
@@ -152,6 +159,8 @@ Responsabilidades chave:
 
 ## Arquitetura
 
+Para uma representação visual da arquitetura e do domínio, veja os **[Diagramas do Sistema](./diagrams/)**.
+
 - Estilo: Clean Architecture com Ports & Adapters (Hexagonal).
 - Camadas: `src/domain` (entidades e portas), `src/application` (use cases e serviços de aplicação), `src/infrastructure` (adapters de banco/segurança), `src/interfaces` (HTTP), `src/main` (composition root).
 - Portas (contracts): `UserRepository`, `PostRepository`, `PasswordHasher`, `TokenService` — os casos de uso dependem apenas dessas interfaces.
@@ -159,6 +168,7 @@ Responsabilidades chave:
 - Composição: `src/main/app.ts` instancia e injeta dependências, compartilhando singletons (Prisma Client, JWT).
 - Drivers: Prisma é o driver padrão nesta branch; um driver in-memory pode ser plugado em testes (futuro `DATA_DRIVER`).
 - Benefícios: baixo acoplamento, testabilidade, facilidade de trocar infraestrutura sem afetar regras de negócio.
+
 
 ## Observações & Dicas
 
