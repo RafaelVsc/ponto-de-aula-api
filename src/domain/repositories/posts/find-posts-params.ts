@@ -1,5 +1,6 @@
 export interface FindPostsParams {
   search?: string;
+  title?: string;
   tag?: string;
   authorId?: string;
   authorName?: string;
