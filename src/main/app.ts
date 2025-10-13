@@ -8,12 +8,16 @@ import { buildAuthModule } from './modules/auth/auth.module';
 import { makePostRepository } from './modules/posts/post-repository-factory';
 import { makeUserRepository } from './modules/users/user-repository-factory';
 import { buildUserModule } from './modules/users/users.module';
+import { setupSwagger } from './config/swagger.config';
 
 export function buildApp() {
   const app = express();
 
   // Middlewares
   app.use(express.json());
+
+  // configure swagger
+  setupSwagger(app);
 
   const prisma = getPrismaClient();
 
