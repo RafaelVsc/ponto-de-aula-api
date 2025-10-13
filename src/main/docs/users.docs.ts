@@ -4,9 +4,9 @@ export default {
       tags: ['Users'],
       summary: 'Create a new user',
       description:
-        '**Access:** Only **ADMIN** and **SECRETARY** can create new users:contentReference[oaicite:1]{index=1}.\n\n' +
+        '**Access:** Only **ADMIN** and **SECRETARY** can create new users.\n\n' +
         '**Important Rules:**\n' +
-        '- SECRETARY can only create users with role **STUDENT** or **TEACHER**:contentReference[oaicite:2]{index=2}.\n' +
+        '- SECRETARY can only create users with role **STUDENT** or **TEACHER**.\n' +
         '- Email and username must be unique (error if already registered).\n' +
         '- The new user’s credentials are set in the request body; no email verification is needed.',
       requestBody: {
@@ -105,9 +105,9 @@ export default {
       tags: ['Users'],
       summary: 'List all users',
       description:
-        '**Access:** Only **ADMIN** and **SECRETARY** can retrieve the user list:contentReference[oaicite:3]{index=3}.\n\n' +
-        '- **ADMIN:** Receives the full list of users (all roles):contentReference[oaicite:4]{index=4}.\n' +
-        '- **SECRETARY:** Receives only users with role STUDENT or TEACHER:contentReference[oaicite:5]{index=5}.',
+        '**Access:** Only **ADMIN** and **SECRETARY** can retrieve the user list.\n\n' +
+        '- **ADMIN:** Receives the full list of users (all roles)\n' +
+        '- **SECRETARY:** Receives only users with role STUDENT or TEACHER.',
       responses: {
         '200': {
           description: 'OK. List of users returned.',
@@ -354,8 +354,8 @@ export default {
       tags: ['Users'],
       summary: 'Get user by ID',
       description:
-        '**Access:** Only **ADMIN** or **SECRETARY** can retrieve another user by ID:contentReference[oaicite:6]{index=6}.\n\n' +
-        '- SECRETARY can only fetch users with role STUDENT or TEACHER:contentReference[oaicite:7]{index=7} (will receive 403 if trying to access an ADMIN/SECRETARY).',
+        '**Access:** Only **ADMIN** or **SECRETARY** can retrieve another user by ID.\n\n' +
+        '- SECRETARY can only fetch users with role STUDENT or TEACHER (will receive 403 if trying to access an ADMIN/SECRETARY).',
       parameters: [
         {
           name: 'id',
@@ -404,8 +404,8 @@ export default {
       summary: 'Update user by ID',
       description:
         'Updates another user’s profile (name or email) by ID.\n\n' +
-        '**Access:** Only **ADMIN** can update other users:contentReference[oaicite:8]{index=8}. (Regular users should use `/users/me` for themselves.)\n\n' +
-        'Note: Only the **name** or **email** can be changed; username and role cannot be modified via this route:contentReference[oaicite:9]{index=9}.',
+        '**Access:** Only **ADMIN** can update other users. (Regular users should use `/users/me` for themselves.)\n\n' +
+        'Note: Only the **name** or **email** can be changed; username and role cannot be modified via this route.',
       parameters: [
         { name: 'id', in: 'path', required: true, schema: { type: 'string', format: 'uuid' } },
       ],
@@ -466,8 +466,7 @@ export default {
     delete: {
       tags: ['Users'],
       summary: 'Delete user by ID',
-      description:
-        'Deletes a user account by ID.\n\n**Access:** Only **ADMIN** can delete users:contentReference[oaicite:10]{index=10}.',
+      description: 'Deletes a user account by ID.\n\n **Access:** Only **ADMIN** can delete users.',
       parameters: [
         { name: 'id', in: 'path', required: true, schema: { type: 'string', format: 'uuid' } },
       ],

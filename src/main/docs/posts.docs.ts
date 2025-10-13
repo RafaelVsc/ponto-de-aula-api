@@ -5,7 +5,7 @@ export default {
       summary: 'Create a new post',
       description:
         'Creates a new post (e.g., a class content post).\n\n' +
-        '**Access:** Only **ADMIN**, **SECRETARY**, or **TEACHER** roles can create posts:contentReference[oaicite:12]{index=12}. Students cannot create posts.\n\n' +
+        '**Access:** Only **ADMIN**, **SECRETARY**, or **TEACHER** roles can create posts. Students cannot create posts.\n\n' +
         'The authenticated user becomes the author of the post automatically (authorId taken from the token).',
       requestBody: {
         required: true,
@@ -216,7 +216,7 @@ export default {
       summary: 'List my posts',
       description:
         'Retrieves posts authored by the current authenticated user.\n\n' +
-        '**Access:** Only **ADMIN**, **SECRETARY**, or **TEACHER** can have personal posts to list (students cannot create posts, so they have none):contentReference[oaicite:13]{index=13}.\n\n' +
+        '**Access:** Only **ADMIN**, **SECRETARY**, or **TEACHER** can have personal posts to list (students cannot create posts, so they have none).\n\n' +
         'This endpoint supports the same query filters as GET /posts, except authorId is fixed to the current user.',
       parameters: [
         {
@@ -332,7 +332,7 @@ export default {
       summary: 'Update a post',
       description:
         'Updates an existing post by ID (any combination of title, content, videoUrl, imageUrl, or tags).\n\n' +
-        '**Access:** **ADMIN**, **SECRETARY**, **TEACHER** can attempt to update (students cannot):contentReference[oaicite:14]{index=14}. However, **only the post author** is allowed to perform the update:contentReference[oaicite:15]{index=15}. (Even Admin cannot update someone else’s post – admin privileges do **not** override authorship for updates.)\n\n' +
+        '**Access:** **ADMIN**, **SECRETARY**, **TEACHER** can attempt to update (students cannot). However, **only the post author** is allowed to perform the update. (Even Admin cannot update someone else’s post – admin privileges do **not** override authorship for updates.)\n\n' +
         'To clear an optional field (imageUrl or videoUrl), you may send an empty string in that field.',
       parameters: [
         { name: 'id', in: 'path', required: true, schema: { type: 'string', format: 'uuid' } },
@@ -397,7 +397,8 @@ export default {
       summary: 'Delete a post',
       description:
         'Deletes a post by ID.\n\n' +
-        '**Access:** **ADMIN**, **SECRETARY**, **TEACHER** can attempt deletion:contentReference[oaicite:16]{index=16}. **Only the author or an Admin** can actually delete the post:contentReference[oaicite:17]{index=17}. (Admins can delete any post; teachers/secretaries can only delete their own posts.)',
+        '**Access:** **ADMIN**, **SECRETARY**, **TEACHER** can attempt deletion.\n\n' +
+        '**Only the author or an Admin** can actually delete the post. (Admins can delete any post; teachers/secretaries can only delete their own posts.)',
       parameters: [
         { name: 'id', in: 'path', required: true, schema: { type: 'string', format: 'uuid' } },
       ],
