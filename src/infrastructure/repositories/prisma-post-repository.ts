@@ -62,7 +62,12 @@ const buildWhere = (params?: FindPostsParams): Prisma.PostWhereInput | undefined
     where.OR = [
       { title: { contains: params.search, mode: 'insensitive' } },
       { content: { contains: params.search, mode: 'insensitive' } },
+      { tags: { has: params.search } },
     ];
+  }
+
+  if (params.title) {
+    where.title = { contains: params.title, mode: 'insensitive' };
   }
 
   if (params.tag) {
