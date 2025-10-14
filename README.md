@@ -12,7 +12,7 @@ Construída com **Node.js** e **TypeScript**, a API segue os princípios da **Cl
 
 
 ## Vídeo de Apresentação
-[![Vídeo de Apresentação do Projeto](https://img.youtube.com/vi/9cXxq5C0OGs/0.jpg)](https://youtu.be/9cXxq5C0OGs)
+[![Vídeo de Apresentação do Projeto](https://img.youtube.com/vi/9cXxq5C0OGs/0.jpg)](https://youtu.be/nMavjATFUyc)
 
 
 ## Stack
@@ -208,3 +208,43 @@ Para uma representação visual da arquitetura e do domínio, veja os **[Diagram
   - Sem profile: `docker compose down --remove-orphans`
   - Com profile: `docker compose --profile app down --remove-orphans`
 - Reset total (apaga dados): `docker compose down --volumes --remove-orphans`
+
+
+## 🧩 Desafios Técnicos e Soluções
+
+Durante o desenvolvimento deste projeto, enfrentei diversos desafios técnicos que contribuíram diretamente para o meu aprendizado e evolução como desenvolvedor.  
+A seguir estão os principais desafios e as soluções aplicadas.
+
+---
+
+### 1. Definição da Arquitetura Clean/Hexagonal
+
+**Desafio:**  
+Implementar uma arquitetura limpa (Hexagonal) que garantisse a separação de responsabilidades e a testabilidade do código.  
+O principal desafio foi manter a disciplina para que as camadas internas (Domínio e Aplicação) não dependessem das camadas externas (Infraestrutura e Interfaces).
+
+**Solução:**  
+Adotei uma estrutura de diretórios refletindo as camadas da arquitetura e utilizei injeção de dependências por meio de *factories* de repositórios.  
+Essa abordagem permitiu desacoplar implementações concretas das interfaces do domínio, possibilitando o uso de repositórios em memória para testes unitários e repositórios Prisma em produção sem alterar os casos de uso.
+
+---
+
+### 2. Autenticação e Segurança
+
+**Desafio:**  
+Implementar um sistema de autenticação seguro e escalável utilizando JWT, garantindo a proteção das credenciais dos usuários.
+
+**Solução:**  
+Utilizei a biblioteca `bcrypt` para criptografar as senhas, armazenando apenas o hash no banco de dados.  
+A autenticação é realizada com tokens JWT assinados e validados em rotas protegidas por meio do middleware `authenticate.ts`, centralizando a lógica de segurança.
+
+---
+
+### 3. Estratégia de Testes
+
+**Desafio:**  
+Criar uma suíte de testes que cobrisse tanto a lógica de negócio (testes unitários) quanto o fluxo completo da aplicação (testes de integração).
+
+**Solução:**  
+Desenvolvi testes unitários para os casos de uso utilizando repositórios em memória, isolando a lógica de negócio do banco de dados.  
+Para os testes de integração, utilizei o `supertest` para validar o comportamento dos endpoints, desde a requisição HTTP até a resposta, incluindo a interação com o banco de dados de teste.
