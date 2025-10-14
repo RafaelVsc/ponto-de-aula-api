@@ -14,12 +14,6 @@ export class JwtService implements TokenService {
   }
 
   private static resolveSecret(secret: string | undefined): string {
-    // if (secret && secret.trim()) return secret;
-    // if (process.env.NODE_ENV === 'production') {
-    //   throw new AppError('JWT secret is not defined', 500);
-    // }
-    // console.warn('JWT_SECRET not set — using fallback secret for dev/test');
-    // return 'dev-secret';
     const isProd = process.env.NODE_ENV === 'production';
 
     if (isProd) {
