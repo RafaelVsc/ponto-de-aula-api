@@ -1,6 +1,19 @@
-# Tech Challenge Fase 2 – API de Posts
+# Tech Challenge Fase 2 – API Ponto de Aula
 
-API em Node.js + TypeScript (Express 5) organizada em Clean Architecture, com persistência via Prisma (PostgreSQL), validação com Zod e autenticação JWT. Inclui CRUD de posts com filtros, paginação e ordenação, além de endpoints de usuários.
+A **API Ponto de Aula** é um projeto RESTful robusto, desenvolvido como parte do Tech Challenge da Fase 2 do curso de **Full Stack Development (Turma 6FSDT)** da Pós Tech FIAP. A aplicação permite a gestão completa de posts e usuários, com funcionalidades essenciais para uma plataforma moderna.
+
+**Principais Funcionalidades:**
+*   **Autenticação e Autorização:** Sistema seguro baseado em Roles com tokens JWT.
+*   **CRUD de Usuários:** Gerenciamento completo de contas de usuário.
+*   **CRUD de Posts:** Criação, leitura, atualização e exclusão de publicações.
+*   **Busca Avançada:** Filtros dinâmicos, paginação e ordenação para consulta de posts.
+
+Construída com **Node.js** e **TypeScript**, a API segue os princípios da **Clean Architecture** e **Hexagonal Architecture**. O código foi estruturado aplicando os conceitos **SOLID** para garantir um sistema desacoplado, testável, coeso e de fácil manutenção, utilizando **Prisma** como ORM para interação com o banco de dados PostgreSQL.
+
+
+## Vídeo de Apresentação
+[![Vídeo de Apresentação do Projeto](https://img.youtube.com/vi/9cXxq5C0OGs/0.jpg)](https://youtu.be/9cXxq5C0OGs)
+
 
 ## Stack
 
@@ -161,7 +174,7 @@ Responsabilidades chave:
 
 Para uma representação visual da arquitetura e do domínio, veja os **[Diagramas do Sistema](./diagrams/)**.
 
-- Estilo: Clean Architecture com Ports & Adapters (Hexagonal).
+- Estilo: Clean Architecture & Hexagonal.
 - Camadas: `src/domain` (entidades e portas), `src/application` (use cases e serviços de aplicação), `src/infrastructure` (adapters de banco/segurança), `src/interfaces` (HTTP), `src/main` (composition root).
 - Portas (contracts): `UserRepository`, `PostRepository`, `PasswordHasher`, `TokenService` — os casos de uso dependem apenas dessas interfaces.
 - Adaptadores: `PrismaUserRepository`, `PrismaPostRepository`, `JwtService`, `BcryptHasher` — implementam as portas na infraestrutura.
