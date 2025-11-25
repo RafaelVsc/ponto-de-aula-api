@@ -5,6 +5,8 @@ export interface PostOutputDTO {
   authorId: string;
   author?: string;
   tags: string[];
+  videoUrl?: string;
+  imageUrl?: string;
   createdAt: string;
   updatedAt: string;
 }
