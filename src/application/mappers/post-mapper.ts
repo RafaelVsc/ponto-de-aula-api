@@ -15,6 +15,8 @@ export function postToOutputDTO(post: Post): PostOutputDTO {
     authorId: post.authorId ?? '',
     author: post.author ?? '',
     tags: post.tags ?? [],
+    videoUrl: post.videoUrl ?? '',
+    imageUrl: post.imageUrl ?? '',
     // Converter Date para ISO String (ou usar now() como fallback)
     createdAt: (post.createdAt as Date).toISOString(),
     updatedAt: (post.updatedAt as Date).toISOString(),

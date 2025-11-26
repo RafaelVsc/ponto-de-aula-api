@@ -4,6 +4,7 @@ import { authenticate } from '@/interfaces/http/middlewares/authenticate';
 import { errorHandler, notFound } from '@/interfaces/http/middlewares/error-handler';
 import { buildPostsModule } from '@/main/modules/posts/posts.module';
 import express from 'express';
+import cors from 'cors';
 import { buildAuthModule } from './modules/auth/auth.module';
 import { makePostRepository } from './modules/posts/post-repository-factory';
 import { makeUserRepository } from './modules/users/user-repository-factory';
@@ -12,6 +13,16 @@ import { setupSwagger } from './config/swagger.config';
 
 export function buildApp() {
   const app = express();
+
+  const allowedOrigins = (process.env.CORS_ORIGIN ?? 'http://localhost:5173').split(',');
+
+  const corsOptions: cors.CorsOptions = {
+    origin: allowedOrigins,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    credentials: true,
+  };
+
+  app.use(cors(corsOptions));
 
   // Middlewares
   app.use(express.json());
