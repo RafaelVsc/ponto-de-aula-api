@@ -1,12 +1,17 @@
 // validators/post/search-posts-validator.ts
 import { z } from 'zod';
 
+// Helper para transformar array em string (pega o primeiro valor)
+const stringOrArray = z
+  .union([z.string(), z.array(z.string())])
+  .transform(val => (Array.isArray(val) ? val[0] : val));
+
 export const searchQuerySchema = z.object({
-  search: z.string().trim().optional(),
-  title: z.string().trim().optional(),
-  tag: z.string().trim().optional(),
-  authorId: z.uuid().optional(),
-  authorName: z.string().trim().optional(),
+  search: stringOrArray.pipe(z.string().trim()).optional(),
+  title: stringOrArray.pipe(z.string().trim()).optional(),
+  tag: stringOrArray.pipe(z.string().trim()).optional(),
+  authorId: stringOrArray.pipe(z.string().uuid()).optional(),
+  authorName: stringOrArray.pipe(z.string().trim()).optional(),
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(100).default(20),
   sortBy: z.enum(['createdAt', 'title']).default('createdAt'),

@@ -43,6 +43,8 @@ export default (
     listPostController.search(req, res, next),
   );
 
+  router.get('/authors', (req, res, next) => listPostController.listAuthors(req, res, next));
+
   router.get('/:id', validateParams(uuidParamSchema), (req, res, next) =>
     listPostController.findById(req, res, next),
   );

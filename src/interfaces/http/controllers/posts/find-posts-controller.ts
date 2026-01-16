@@ -1,4 +1,5 @@
 import { GetPostByIdUseCase } from '@/application/usecases/posts/get-posts-by-id-use-case';
+import { ListPostAuthorsUseCase } from '@/application/usecases/posts/list-post-authors-use-case';
 import { ListPostsUseCase } from '@/application/usecases/posts/list-posts-use-case';
 import { SearchPostsUseCase } from '@/application/usecases/posts/search-posts-use-case';
 import { UserRole } from '@/domain/entities/User';
@@ -9,6 +10,7 @@ export class ListAllPostsController {
     private listPostUseCase: ListPostsUseCase,
     private getPostByIdUseCase: GetPostByIdUseCase,
     private searchPostsUseCase: SearchPostsUseCase,
+    private listPostAuthorsUseCase: ListPostAuthorsUseCase,
   ) {}
 
   async findById(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
@@ -23,10 +25,19 @@ export class ListAllPostsController {
     }
   }
 
+  async listAuthors(_req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+    try {
+      const authors = await this.listPostAuthorsUseCase.execute();
+      return res.status(200).json({ data: authors });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async listAll(_req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
-      const posts = await this.listPostUseCase.execute();
-      return res.status(200).json({ data: posts });
+      const result = await this.listPostUseCase.execute();
+      return res.status(200).json(result);
     } catch (error) {
       next(error);
     }
@@ -38,7 +49,7 @@ export class ListAllPostsController {
         req as any
       ).validatedQuery;
 
-      const posts = await this.searchPostsUseCase.execute({
+      const result = await this.searchPostsUseCase.execute({
         search,
         tag,
         authorId,
@@ -50,7 +61,7 @@ export class ListAllPostsController {
         sortOrder,
       });
 
-      return res.status(200).json({ data: posts });
+      return res.status(200).json(result);
     } catch (error) {
       next(error);
     }
@@ -60,7 +71,7 @@ export class ListAllPostsController {
     try {
       const { search, tag, page, limit, sortBy, sortOrder } = (req as any).validatedQuery;
       const currentUser = res.locals.auth as { id: string; role: UserRole };
-      const posts = await this.searchPostsUseCase.execute({
+      const result = await this.searchPostsUseCase.execute({
         search,
         tag,
         authorId: currentUser.id,
@@ -69,7 +80,7 @@ export class ListAllPostsController {
         sortBy,
         sortOrder,
       });
-      return res.status(200).json({ data: posts });
+      return res.status(200).json(result);
     } catch (error) {
       next(error);
     }

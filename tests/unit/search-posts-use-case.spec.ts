@@ -6,6 +6,7 @@ describe('SearchPostsUseCase', () => {
   const makeRepo = (): jest.Mocked<PostRepository> => ({
     findById: jest.fn(),
     findAll: jest.fn(),
+    findAuthors: jest.fn(),
     create: jest.fn(),
     update: jest.fn(),
     delete: jest.fn(),
@@ -23,17 +24,22 @@ describe('SearchPostsUseCase', () => {
   it('forwards filters and maps DTOs', async () => {
     const repo = makeRepo();
     const now = new Date();
-    repo.findAll.mockResolvedValue([
-      {
-        id: 'p1',
-        title: 'T',
-        content: 'C',
-        authorId: 'a1',
-        createdAt: now,
-        updatedAt: now,
-        tags: ['t'],
-      } as Post,
-    ]);
+    repo.findAll.mockResolvedValue({
+      items: [
+        {
+          id: 'p1',
+          title: 'T',
+          content: 'C',
+          authorId: 'a1',
+          createdAt: now,
+          updatedAt: now,
+          tags: ['t'],
+        } as Post,
+      ],
+      total: 1,
+      page: 2,
+      limit: 10,
+    });
 
     const sut = new SearchPostsUseCase(repo);
     const params = {
@@ -48,8 +54,11 @@ describe('SearchPostsUseCase', () => {
     const out = await sut.execute(params);
 
     expect(repo.findAll).toHaveBeenCalledWith(params);
-    expect(out).toHaveLength(1);
-    const first = out[0]!;
+    expect(out.data).toHaveLength(1);
+    expect(out.meta.total).toBe(1);
+    expect(out.meta.page).toBe(2);
+    expect(out.meta.limit).toBe(10);
+    const first = out.data[0]!;
     expect(first.id).toBe('p1');
     expect(typeof first.createdAt).toBe('string');
   });

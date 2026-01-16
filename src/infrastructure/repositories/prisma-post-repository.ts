@@ -1,6 +1,10 @@
 import { Post } from '@/domain/entities/Post';
 import { FindPostsParams } from '@/domain/repositories/posts/find-posts-params';
-import { PostRepository } from '@/domain/repositories/posts/post-repository';
+import {
+  FindPostsResult,
+  PostAuthorSummary,
+  PostRepository,
+} from '@/domain/repositories/posts/post-repository';
 import { Prisma, PrismaClient } from '@/generated/prisma/client';
 import {
   toDomain,
@@ -17,14 +21,54 @@ export class PrismaPostRepository implements PostRepository {
     return post ? toDomainWithAuthor(post) : null;
   }
 
-  async findAll(params?: FindPostsParams): Promise<Post[]> {
-    const posts = await this.prisma.post.findMany({
-      where: buildWhere(params),
-      include: { author: true },
-      orderBy: buildOrderBy(params),
-      ...buildPagination(params),
+  async findAll(params?: FindPostsParams): Promise<FindPostsResult> {
+    const where = buildWhere(params);
+    const pagination = buildPagination(params);
+    const orderBy = buildOrderBy(params);
+
+    const [total, posts] = await this.prisma.$transaction([
+      this.prisma.post.count({ where }),
+      this.prisma.post.findMany({
+        where,
+        include: { author: true },
+        orderBy,
+        ...pagination,
+      }),
+    ]);
+
+    const page = Math.max(params?.page ?? 1, 1);
+    const limit = Math.max(params?.limit ?? pagination.take ?? posts.length ?? 0, 1);
+
+    return {
+      items: posts.map(toDomainWithAuthor),
+      total,
+      page,
+      limit,
+    };
+  }
+
+  async findAuthors(): Promise<PostAuthorSummary[]> {
+    const grouped = await this.prisma.post.groupBy({
+      by: ['authorId'],
+      _count: { _all: true },
     });
-    return posts.map(toDomainWithAuthor);
+
+    if (!grouped.length) return [];
+
+    const authors = await this.prisma.user.findMany({
+      where: { id: { in: grouped.map(g => g.authorId) } },
+      select: { id: true, name: true },
+    });
+
+    const names = new Map(authors.map(author => [author.id, author.name]));
+
+    return grouped
+      .map(group => ({
+        id: group.authorId,
+        name: names.get(group.authorId) ?? '',
+        totalPosts: group._count._all,
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name));
   }
 
   async create(post: Post): Promise<Post> {

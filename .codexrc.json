@@ -1,0 +1,15 @@
+{
+  "model": "gpt-5-codex",
+  "reasoning": "advanced",
+  "temperature": 0.2,
+  "max_tokens": 20000,
+  "filesystem": {
+    "write": true
+  },
+  "allow": {
+    "shell": false,
+    "git": false
+  },
+  "seed": 42,
+  "cache": true
+}

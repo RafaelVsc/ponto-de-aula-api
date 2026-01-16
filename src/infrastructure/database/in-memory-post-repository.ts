@@ -1,6 +1,10 @@
 import { Post } from '../../domain/entities/Post';
 import { FindPostsParams } from '../../domain/repositories/posts/find-posts-params';
-import { PostRepository } from '../../domain/repositories/posts/post-repository';
+import {
+  FindPostsResult,
+  PostAuthorSummary,
+  PostRepository,
+} from '../../domain/repositories/posts/post-repository';
 import { randomUUID } from 'crypto';
 
 export class InMemoryPostRepository implements PostRepository {
@@ -10,8 +14,12 @@ export class InMemoryPostRepository implements PostRepository {
     return this.posts.find(post => post.id === id) ?? null;
   }
 
-  async findAll(params?: FindPostsParams): Promise<Post[]> {
-    if (!params) return [...this.posts];
+  async findAll(params?: FindPostsParams): Promise<FindPostsResult> {
+    if (!params) {
+      const total = this.posts.length;
+      const limit = Math.max(total, 1);
+      return { items: [...this.posts], total, page: 1, limit };
+    }
 
     let filteredPosts = [...this.posts];
 
@@ -57,14 +65,30 @@ export class InMemoryPostRepository implements PostRepository {
       });
     }
 
+    const total = filteredPosts.length;
+
     // 📄 Paginação (offset)
     if (params.page !== undefined && params.limit !== undefined) {
-      const startIndex = (params.page - 1) * params.limit;
-      const endIndex = startIndex + params.limit;
+      const safePage = Math.max(params.page, 1);
+      const safeLimit = Math.max(params.limit, 1);
+      const startIndex = (safePage - 1) * safeLimit;
+      const endIndex = startIndex + safeLimit;
       filteredPosts = filteredPosts.slice(startIndex, endIndex);
+      return {
+        items: filteredPosts,
+        total,
+        page: safePage,
+        limit: safeLimit,
+      };
     }
 
-    return filteredPosts;
+    const limit = Math.max(params.limit ?? total, 1);
+    return {
+      items: filteredPosts,
+      total,
+      page: Math.max(params.page ?? 1, 1),
+      limit,
+    };
   }
 
   async update(id: string, data: Partial<Post>): Promise<Post | null> {
@@ -98,5 +122,22 @@ export class InMemoryPostRepository implements PostRepository {
     };
     this.posts.push(newPost);
     return newPost;
+  }
+
+  async findAuthors(): Promise<PostAuthorSummary[]> {
+    const authorsMap = new Map<string, { name: string; total: number }>();
+
+    for (const post of this.posts) {
+      const current = authorsMap.get(post.authorId) ?? { name: post.author ?? '', total: 0 };
+      authorsMap.set(post.authorId, { name: current.name || post.author || '', total: current.total + 1 });
+    }
+
+    return Array.from(authorsMap.entries())
+      .map(([id, { name, total }]) => ({
+        id,
+        name,
+        totalPosts: total,
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name));
   }
 }

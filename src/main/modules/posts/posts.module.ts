@@ -2,6 +2,7 @@
 import { CreatePostUseCase } from '@/application/usecases/posts/create-post-use-case';
 import { DeletePostUseCase } from '@/application/usecases/posts/delete-post-use-case';
 import { GetPostByIdUseCase } from '@/application/usecases/posts/get-posts-by-id-use-case';
+import { ListPostAuthorsUseCase } from '@/application/usecases/posts/list-post-authors-use-case';
 import { ListPostsUseCase } from '@/application/usecases/posts/list-posts-use-case';
 import { SearchPostsUseCase } from '@/application/usecases/posts/search-posts-use-case';
 import { UpdatePostUseCase } from '@/application/usecases/posts/update-post-use-case';
@@ -20,6 +21,7 @@ export function buildPostsModule(postRepository: PostRepository): Router {
   const listPostsUseCase = new ListPostsUseCase(postRepository);
   const getPostByIdUseCase = new GetPostByIdUseCase(postRepository);
   const searchPostsUseCase = new SearchPostsUseCase(postRepository);
+  const listPostAuthorsUseCase = new ListPostAuthorsUseCase(postRepository);
   const updatePostUseCase = new UpdatePostUseCase(postRepository);
   const deletePostUseCase = new DeletePostUseCase(postRepository);
 
@@ -28,6 +30,7 @@ export function buildPostsModule(postRepository: PostRepository): Router {
     listPostsUseCase,
     getPostByIdUseCase,
     searchPostsUseCase,
+    listPostAuthorsUseCase,
   );
   const updatePostController = new UpdatePostController(updatePostUseCase);
   const deletePostController = new DeletePostController(deletePostUseCase);

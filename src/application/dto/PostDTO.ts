@@ -10,3 +10,21 @@ export interface PostOutputDTO {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface PostAuthorDTO {
+  id: string;
+  name: string;
+  totalPosts: number;
+}
+
+export interface PaginatedPostsOutputDTO {
+  data: PostOutputDTO[];
+  meta: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+  };
+}

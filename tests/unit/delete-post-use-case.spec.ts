@@ -7,6 +7,7 @@ describe('DeletePostUseCase', () => {
   const makeRepo = (): jest.Mocked<PostRepository> => ({
     findById: jest.fn(),
     findAll: jest.fn(),
+    findAuthors: jest.fn(),
     create: jest.fn(),
     update: jest.fn(),
     delete: jest.fn(),

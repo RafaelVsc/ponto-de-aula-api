@@ -143,6 +143,17 @@ export default {
                 type: 'object',
                 properties: {
                   data: { type: 'array', items: { $ref: '#/components/schemas/Post' } },
+                  meta: {
+                    type: 'object',
+                    properties: {
+                      page: { type: 'integer', example: 1 },
+                      limit: { type: 'integer', example: 20 },
+                      total: { type: 'integer', example: 42 },
+                      totalPages: { type: 'integer', example: 3 },
+                      hasNextPage: { type: 'boolean', example: true },
+                      hasPreviousPage: { type: 'boolean', example: false },
+                    },
+                  },
                 },
               },
               example: {
@@ -168,6 +179,14 @@ export default {
                     updatedAt: '2025-10-12T09:15:00.000Z',
                   },
                 ],
+                meta: {
+                  page: 1,
+                  limit: 20,
+                  total: 2,
+                  totalPages: 1,
+                  hasNextPage: false,
+                  hasPreviousPage: false,
+                },
               },
             },
           },
@@ -200,7 +219,67 @@ export default {
                 type: 'object',
                 properties: {
                   data: { type: 'array', items: { $ref: '#/components/schemas/Post' } },
+                  meta: {
+                    type: 'object',
+                    properties: {
+                      page: { type: 'integer', example: 1 },
+                      limit: { type: 'integer', example: 20 },
+                      total: { type: 'integer', example: 42 },
+                      totalPages: { type: 'integer', example: 3 },
+                      hasNextPage: { type: 'boolean', example: true },
+                      hasPreviousPage: { type: 'boolean', example: false },
+                    },
+                  },
                 },
+              },
+            },
+          },
+        },
+        '401': { $ref: '#/components/responses/UnauthorizedError' },
+      },
+      security: [{ bearerAuth: [] }],
+    },
+  },
+  '/posts/authors': {
+    get: {
+      tags: ['Posts'],
+      summary: 'List post authors',
+      description:
+        'Returns the distinct authors that have published posts, along with how many posts each has.',
+      responses: {
+        '200': {
+          description: 'OK. List of authors that have at least one post.',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  data: {
+                    type: 'array',
+                    items: {
+                      type: 'object',
+                      properties: {
+                        id: { type: 'string', format: 'uuid' },
+                        name: { type: 'string' },
+                        totalPosts: { type: 'integer' },
+                      },
+                    },
+                  },
+                },
+              },
+              example: {
+                data: [
+                  {
+                    id: 'd290f1ee-6c54-4b01-90e6-d701748f0851',
+                    name: 'Alice Teacher',
+                    totalPosts: 5,
+                  },
+                  {
+                    id: '14e26d52-5c0a-4ef4-84d6-16fa2ca09942',
+                    name: 'Bob Teacher',
+                    totalPosts: 2,
+                  },
+                ],
               },
             },
           },
@@ -263,6 +342,17 @@ export default {
                 type: 'object',
                 properties: {
                   data: { type: 'array', items: { $ref: '#/components/schemas/Post' } },
+                  meta: {
+                    type: 'object',
+                    properties: {
+                      page: { type: 'integer', example: 1 },
+                      limit: { type: 'integer', example: 20 },
+                      total: { type: 'integer', example: 5 },
+                      totalPages: { type: 'integer', example: 1 },
+                      hasNextPage: { type: 'boolean', example: false },
+                      hasPreviousPage: { type: 'boolean', example: false },
+                    },
+                  },
                 },
               },
             },
